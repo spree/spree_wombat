@@ -37,8 +37,8 @@ module Spree
               expect(user.ship_address.firstname).to eql message["customer"]["firstname"]
               expect(user.ship_address.lastname).to eql message["customer"]["lastname"]
             end
-
           end
+
           context "response" do
             let(:responder) { handler.process }
 
