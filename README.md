@@ -10,10 +10,11 @@ Add spree_wombat to your Gemfile:
 gem 'spree_wombat', github: 'spree/spree_wombat', branch: '2-2-stable'
 ```
 
-Bundle your dependencies:
+Bundle your dependencies and run the installation generator:
 
 ```shell
 bundle
+bundle exec rails g spree_wombat:install
 ```
 
 Add your Wombat credentials to `config/initializers/spree.rb`:
@@ -27,7 +28,7 @@ By default we push to `https://push.wombat.co` but you can override that setting
 like this:
 
 ```ruby
-Spree::Hub::Config[:push_url] = "push_url"
+Spree::Wombat::Config[:push_url] = "push_url"
 ```
 
 ## Testing
