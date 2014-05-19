@@ -68,7 +68,7 @@ RSpec.configure do |config|
   end
 end
 
-class Spree::Wombat::Handler::AddOrderHandler < Spree::Wombat::Handler::Base
+class Spree::Wombat::Handler::MyCustomHandler < Spree::Wombat::Handler::Base
   def process
     response "Order added!"
   end

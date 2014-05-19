@@ -25,7 +25,7 @@ module Spree
 
         context 'and an existing handler for the webhook' do
           it 'will process the webhook handler' do
-            post 'consume', ::Hub::Samples::Order.request.to_json, {use_route: :spree, format: :json, path: 'add_order'}
+            post 'consume', ::Hub::Samples::Order.request.to_json, {use_route: :spree, format: :json, path: 'my_custom'}
             expect(response).to be_success
           end
         end
