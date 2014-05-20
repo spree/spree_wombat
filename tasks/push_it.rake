@@ -1,4 +1,4 @@
-require 'wombat'
+require 'spree/wombat'
 
 namespace :wombat do
   desc 'Push batches to Wombat'

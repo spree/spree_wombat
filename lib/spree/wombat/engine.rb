@@ -4,6 +4,10 @@ module Spree
       isolate_namespace Spree
       engine_name 'spree_wombat'
 
+      rake_tasks do
+        load File.join(root, "tasks","push_it.rake")
+      end
+
       initializer "spree.wombat.environment", :before => :load_config_initializers do |app|
         Spree::Wombat::Config = Spree::WombatConfiguration.new
       end
