@@ -1,10 +1,31 @@
 require 'json'
 require 'openssl'
 require 'httparty'
+require 'active_model/array_serializer'
 
 module Spree
   module Wombat
     class Client
+
+      def self.push_batches(object)
+        ts = Spree::Wombat::Config[:last_pushed_timestamps][object]
+        payload_builder = Spree::Wombat::Config[:payload_builder][object]
+
+        ts = object.constantize.first.updated_at unless ts
+
+        object.constantize.where("updated_at > ?", ts).find_in_batches(batch_size: 10) do |batch|
+          payload = ActiveModel::ArraySerializer.new(
+            batch,
+            each_serializer: payload_builder[:serializer].constantize,
+            root: payload_builder[:root]
+          ).to_json
+          push(payload)
+        end
+
+        last_pushed_ts = Spree::Wombat::Config[:last_pushed_timestamps]
+        last_pushed_ts[object] = Time.now
+        Spree::Wombat::Config[:last_pushed_timestamps] = last_pushed_ts
+      end
 
       def self.push(json_payload)
         HTTParty.post(

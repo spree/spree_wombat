@@ -27,6 +27,7 @@ module Spree
       private
 
       def add_host_prefix(url)
+        return url unless ActionController::Base.asset_host
         URI.join(ActionController::Base.asset_host, url).to_s
       end
 
