@@ -1,0 +1,9 @@
+require 'active_model/serializer'
+
+class <%=serializer_name%> < ActiveModel::Serializer
+  #attributes :myattribute
+
+  #def my_attribute
+  #  object.items.count
+  #end
+end

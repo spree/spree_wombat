@@ -17,7 +17,7 @@ bundle
 bundle exec rails g spree_wombat:install
 ```
 
-Add your Wombat credentials to `config/initializers/spree.rb`:
+Add your Wombat credentials to `config/initializers/wombat.rb`:
 
 ```ruby
 Spree::Wombat::Config[:connection_token] = "sdfsfddfdss"
