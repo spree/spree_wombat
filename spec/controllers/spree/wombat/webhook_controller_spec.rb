@@ -32,10 +32,10 @@ module Spree
 
         context 'when an exception happens' do
           it 'will return resonse with the exception message and backtrace' do
-            post 'consume', ::Hub::Samples::Order.request.to_json, {use_route: :spree, format: :json, path: 'update_order'}
+            post 'consume', ::Hub::Samples::Order.request.to_json, {use_route: :spree, format: :json, path: 'upblate_order'}
             expect(response.code).to eql "500"
             json = JSON.parse(response.body)
-            expect(json["summary"]).to eql "uninitialized constant Spree::Wombat::Handler::UpdateOrderHandler"
+            expect(json["summary"]).to eql "uninitialized constant Spree::Wombat::Handler::UpblateOrderHandler"
             expect(json["backtrace"]).to be_present
           end
         end
