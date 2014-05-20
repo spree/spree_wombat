@@ -20,16 +20,61 @@ bundle exec rails g spree_wombat:install
 Add your Wombat credentials to `config/initializers/wombat.rb`:
 
 ```ruby
-Spree::Wombat::Config[:connection_token] = "sdfsfddfdss"
-Spree::Wombat::Config[:connection_id] = "sdfsfddfdss"
+Spree::Wombat::Config.configure do |config|
+  config.connection_token = "YOUR TOKEN"
+  config.connection_id = "YOUR CONNECTION ID"
+end
 ```
 
-By default we push to `https://push.wombat.co` but you can override that setting
-like this:
+## Configuration
+
+All the configuration is done inside the initializer here: `config/initializers/wombat.rb`
+
+* push_url
+* push_objects
+* payload_builder
+* last_pushed_timestamps
+
+## Push to the hub
+
+```shell
+bundle exec rake wombat:push_it
+```
+
+## Create handler for a webhook
+
+```shell
+bundle exec rails g wombat:webhook my_webhook
+```
+
+this will generate a handler class for the `my_webhook` webhook in `lib/spree/wombat/handler/my_webhookhandler.rb`
 
 ```ruby
-Spree::Wombat::Config[:push_url] = "push_url"
+module Spree
+  module Wombat
+    module Handler
+      class MyWebhookHandler < Base
+
+        def process
+          @webhook = @payload[:webhook]
+
+          #insert code here to handle
+        end
+
+      end
+    end
+  end
+end
+
 ```
+
+
+## Create custom serializers
+
+```shell
+bundle exec rails g wombat:serializer
+```
+
 
 ## Testing
 
