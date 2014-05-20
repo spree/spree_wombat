@@ -1,0 +1,15 @@
+module Spree
+  module Wombat
+    module Handler
+      class <%=handler_class%> < Base
+
+        def process
+          @<%=handler_object%> = @payload[:<%=handler_object%>]
+
+          #insert code here to handle
+        end
+
+      end
+    end
+  end
+end
