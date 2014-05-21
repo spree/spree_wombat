@@ -19,19 +19,10 @@ module SpreeWombat
           self.superclass = "ActiveModel::Serializer"
         end
         template "serializer.rb.tt", "app/serializers/#{serializer_name.underscore}.rb"
-        say %Q{
-          #{'*' * 80}
-          To use #{serializer_name} for pushing #{model_name} objects to Wombat,
-          add or update your the payload_builder configuration in
-          config/initializers/wombat.rb to include this:
 
-          config.payload_builder = {
-            # other existing definitions
-            "#{model_name}" => {:serializer => "#{serializer_name}", :root => "#{root_sample}"}
-          }
+        payload_builder[model_name] = { :serializer => serializer_name, :root => root_sample}
 
-          #{'*' * 80}
-        }
+        append_file 'config/initializers/wombat.rb', "Spree::Wombat::Config[:payload_builder] = #{payload_builder}\n\n"
 
       end
     end

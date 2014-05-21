@@ -145,7 +145,7 @@ bundle exec rails g wombat:serializer Spree::Order MyOrderSerializer
 
 This will generate a serializer for the provided model name, when the model is already configured in the `payload_builder` we use that serializer name as super class to inherit from. With active_model_serializer you also inherit the attributes so you can keep the existing configuration and only change that what's needed.
 
-The generator will show you exactly what steps you need to take there.
+The generator will also automatically set the correct configuration in `config/initializers/wombat.rb`
 
 ## Testing
 
