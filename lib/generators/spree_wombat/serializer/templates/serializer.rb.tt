@@ -1,6 +1,10 @@
 require 'active_model/serializer'
 
-class <%=serializer_name%> < ActiveModel::Serializer
+<% if superclass != "ActiveModel::Serializer" %>
+  # inherit from ActiveModel::Serializer if you want to completely replace the existing serializer
+<% end %>
+
+class <%=serializer_name%> < <%=superclass%>
   #attributes :myattribute
 
   #def my_attribute
