@@ -28,27 +28,21 @@ end
 
 ## Configuration
 
-All the configuration is done inside the initializer here: `config/initializers/wombat.rb`
-
-### push_url
-
-You can override the default url to push your data to.
-
-```ruby
-config.push_url = "http://mycustomurl"
-```
+All the configuration is done inside the initializer here: `config/initializers/wombat.rb` all the default settings can be found there as well. Below we will explain all of them
 
 ### push_objects
 
-The push_objects is an array of model names that are selected to push to Wombat.
+The push_objects is an array of model names that are selected to push to Wombat. We use these as keys in other places as well to configure how the payload is serialized and to keep track of the last time we pushed the objects.
 
 ```ruby
 config.push_objects = ["Spree::Order", "Spree::Product"]
 ```
 
+By default we only push `Spree::Order` and `Spree::Product` models.
+
 ### payload_builder
 
-To push the data to Wombat we need to configure the way we construct the JSON payload.
+To push the data to Wombat we need to configure the way on how to construct the JSON payload.
 
 
 ```ruby
@@ -62,14 +56,45 @@ The payload builder is a hash, the key is the model name we also use in the `pus
 
 Each model has a `serializer` and a `root` field that defines the serializer we use to serialize to JSON and the root defines the root node for that JSON.
 
+We have defined serializers for the default objects, you can find them [here](https://github.com/spree/spree_wombat/tree/2-2-stable/app/serializers/spree/wombat)
+
+To push other objects to Wombat, you only need to add an entry in the `push_objects` and the `payload_builder` configurations.
+
+
 ### last_pushed_timestamps
 
-For every model we push to Wombat we keep track when we pushed the objects
+For every model we push to Wombat we keep track when we pushed the objects.
 
 ## Push to the hub
 
+To push objects to the hub we provide you with the following rake task:
+
 ```shell
 bundle exec rake wombat:push_it
+```
+
+This task will collect all the objects from `push_objects` that are not yet pushed (defined in `last_pushed_timestamps`) and will push those objects in batches of 10 to Wombat.
+
+You could also add a background task to make that happen, all you need there are these lines:
+
+```ruby
+Spree::Wombat::Config[:push_objects].each do |object|
+  Spree::Wombat::Client.push_batches(object)
+end
+```
+
+If you want to push Spree::Orders manually for example, you can call this:
+
+```ruby
+Spree::Wombat::Client.push_batches("Spree::Order")
+```
+
+### push_url
+
+You can override the default url to push your data to. Normally you will not need to change this though.
+
+```ruby
+config.push_url = "http://mycustomurl"
 ```
 
 ## Create handler for a webhook
