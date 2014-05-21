@@ -65,6 +65,18 @@ To push other objects to Wombat, you only need to add an entry in the `push_obje
 
 For every model we push to Wombat we keep track when we pushed the objects.
 
+Do not add this in `config/initializers/wombat.rb` otherwise it will reset the data on each restart.
+
+Instead, if you need to reset data or want to update a timestamp for an object you can do so in the console
+
+```shell
+timestamps = Spree::Wombat::Config[:last_pushed_timestamps]
+timestamps["Spree::Order"] = 2.days.ago
+Spree::Wombat::Config[:last_pushed_timestamps] = timestamps
+```
+
+This will update the preference in the database and will use your updated timestamp for, in this case, 'Spree::Order'
+
 ## Push to the hub
 
 To push objects to the hub we provide you with the following rake task:

@@ -8,11 +8,6 @@ Spree::Wombat::Config.configure do |config|
   #   "Spree::Order" => {:serializer => "Spree::Wombat::OrderSerializer", :root => "orders"},
   #   "Spree::Product" => {:serializer => "Spree::Wombat::ProductSerializer", :root => "products"},
   # }
-  # config.last_pushed_timestamps = {
-  #   "Spree::Order" => nil,
-  #   "Spree::Product" => nil
-  # }
-
   #config.push_url = "https://push.wombat.co"
 
 end
