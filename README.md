@@ -30,10 +30,41 @@ end
 
 All the configuration is done inside the initializer here: `config/initializers/wombat.rb`
 
-* push_url
-* push_objects
-* payload_builder
-* last_pushed_timestamps
+### push_url
+
+You can override the default url to push your data to.
+
+```ruby
+config.push_url = "http://mycustomurl"
+```
+
+### push_objects
+
+The push_objects is an array of model names that are selected to push to Wombat.
+
+```ruby
+config.push_objects = ["Spree::Order", "Spree::Product"]
+```
+
+### payload_builder
+
+To push the data to Wombat we need to configure the way we construct the JSON payload.
+
+
+```ruby
+config.payload_builder = {
+  "Spree::Order"  => {:serializer => "Spree::Wombat::OrderSerializer", :root => "orders"},
+  "Spree::Product" => {:serializer => "Spree::Wombat::ProductSerializer", :root => "products"},
+}
+
+```
+The payload builder is a hash, the key is the model name we also use in the `push_objects` config.
+
+Each model has a `serializer` and a `root` field that defines the serializer we use to serialize to JSON and the root defines the root node for that JSON.
+
+### last_pushed_timestamps
+
+For every model we push to Wombat we keep track when we pushed the objects
 
 ## Push to the hub
 
