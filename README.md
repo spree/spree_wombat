@@ -103,7 +103,7 @@ config.push_url = "http://mycustomurl"
 bundle exec rails g wombat:webhook my_webhook
 ```
 
-this will generate a handler class for the `my_webhook` webhook in `lib/spree/wombat/handler/my_webhookhandler.rb`
+this will generate a handler class for the `my_webhook` webhook in `lib/spree/wombat/handler/my_webhook_handler.rb`
 
 ```ruby
 module Spree
