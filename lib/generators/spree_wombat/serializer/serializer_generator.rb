@@ -2,13 +2,13 @@ module SpreeWombat
   module Generators
     class SerializerGenerator < Rails::Generators::Base
 
-      desc "Generates a serializer for "
+      desc "Generates a serializer"
       source_root File.expand_path("../templates", __FILE__)
       argument :model_name, type: :string, desc: "the model name for the serializer (Spree::Shipment)"
       argument :serializer_name, type: :string, desc: "the name for the new serializer (MyShipmentSerializer)"
 
       def generate
-        template "serializer.rb.tt", "app/serializers/#{serializer_name}_handler.rb"
+        template "serializer.rb.tt", "app/serializers/#{serializer_name.underscore}_handler.rb"
       end
     end
   end
