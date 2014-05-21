@@ -11,7 +11,7 @@ module SpreeWombat
 
       def generate
         payload_builder = Spree::Wombat::Config[:payload_builder]
-        root_sample = model_name.demodulize.pluralize.downcase
+        root_sample = model_name.demodulize.underscore.pluralize.downcase
 
         if payload_builder.keys.include?(model_name)
           self.superclass = payload_builder[model_name][:serializer]
