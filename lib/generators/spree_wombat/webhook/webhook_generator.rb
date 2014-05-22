@@ -18,7 +18,6 @@ module SpreeWombat
           end
         end
         template "webhook.rb.tt", "lib/spree/wombat/handler/#{webhook_handler_file}"
-        append_file "config/application.rb", "require File.join(File.dirname(__FILE__), '../lib/spree/wombat/handler/#{webhook_handler_file}')\n"
       end
 
       private
