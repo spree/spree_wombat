@@ -4,9 +4,17 @@ module Spree
       class <%=handler_class%> < Base
 
         def process
-          @<%=handler_object%> = @payload[:<%=handler_object%>]
+          <%=handler_object%> = @payload[:<%=handler_object%>]
 
           #insert code here to handle
+
+          # return response json (defaults to 200 OK)
+          response "ok"
+
+          #
+          # when something is wrong return response with 500 code like this:
+          #
+          # response "something is wrong", 500
         end
 
       end
