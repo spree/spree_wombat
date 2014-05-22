@@ -11,9 +11,9 @@ module SpreeWombat
         Dir.glob(File.join(File.dirname(__FILE__), "../../../**/*_handler.rb")) do |handler|
           if File.basename(handler) == webhook_handler_file
             say %Q{
-              #{'*' * 80}
-              [WARNING] overriding an extising handler defined here: #{File.absolute_path handler}
-              #{'*' * 80}
+#{'*' * 80}
+[WARNING] overriding an extising handler defined here: #{File.absolute_path handler}
+#{'*' * 80}
             }
           end
         end
