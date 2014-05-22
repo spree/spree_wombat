@@ -9,12 +9,12 @@ module Spree
           #insert code here to handle
 
           # return response json (defaults to 200 OK)
-          response "ok"
+          response "Request was processed succesfully"
 
-          #
+          
           # when something is wrong return response with 500 code like this:
           #
-          # response "something is wrong", 500
+          # response "Something went wrong", 500
         end
 
       end
