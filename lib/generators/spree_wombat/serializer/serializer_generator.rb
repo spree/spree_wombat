@@ -20,10 +20,13 @@ module SpreeWombat
         end
         template "serializer.rb.tt", "app/serializers/#{serializer_name.underscore}.rb"
 
-        payload_builder[model_name] = { :serializer => serializer_name, :root => root_sample}
+        #payload_builder[model_name] = { :serializer => serializer_name, :root => root_sample}
 
-        append_file 'config/initializers/wombat.rb', "Spree::Wombat::Config[:payload_builder] = #{payload_builder}\n\n"
-
+        append_file 'config/initializers/wombat.rb', %Q{
+payload_builder = Spree::Wombat::Config[:payload_builder]
+payload_builder["#{model_name}"] = { :serializer => "#{serializer_name}", :root => "#{root_sample}" }
+Spree::Wombat::Config[:payload_builder] = payload_builder
+        }
       end
     end
   end
