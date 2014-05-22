@@ -8,13 +8,18 @@ module Spree
     class Client
 
       def self.push_batches(object)
+        object_count = 0
+
         ts = Spree::Wombat::Config[:last_pushed_timestamps][object]
         payload_builder = Spree::Wombat::Config[:payload_builder][object]
 
-        ts = Time.now unless ts
+        unless ts
+          ts = Time.now
+          touch_last_pushed(object)
+        end
 
         object.constantize.where("updated_at > ?", ts).find_in_batches(batch_size: 10) do |batch|
-
+          object_count += batch.size
           payload = ActiveModel::ArraySerializer.new(
             batch,
             each_serializer: payload_builder[:serializer].constantize,
@@ -22,12 +27,9 @@ module Spree
           ).to_json
 
           push(payload)
-
-          last_pushed_ts = Spree::Wombat::Config[:last_pushed_timestamps]
-          last_pushed_ts[object] = Time.now
-          Spree::Wombat::Config[:last_pushed_timestamps] = last_pushed_ts
-
+          touch_last_pushed(object)
         end
+        object_count
       end
 
       def self.push(json_payload)
@@ -43,6 +45,13 @@ module Spree
             }
           }
         )
+      end
+
+      private
+      def self.touch_last_pushed(object)
+        last_pushed_ts = Spree::Wombat::Config[:last_pushed_timestamps]
+        last_pushed_ts[object] = Time.now
+        Spree::Wombat::Config[:last_pushed_timestamps] = last_pushed_ts
       end
 
     end

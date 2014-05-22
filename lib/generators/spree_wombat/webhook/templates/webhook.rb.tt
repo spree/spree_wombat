@@ -1,7 +1,7 @@
 module Spree
   module Wombat
     module Handler
-      class <%=handler_class%> < Base
+      class <%=handler_class%> <%= "< Base" unless existing_handler %>
 
         def process
           <%=handler_object%> = @payload[:<%=handler_object%>]

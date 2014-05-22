@@ -6,10 +6,14 @@ module SpreeWombat
       source_root File.expand_path("../templates", __FILE__)
       argument :webhook_name, :type => :string,  desc: "the webhook name to add"
 
+      attr_accessor :existing_handler
+
       def generate
+        @existing_handler = false
         webhook_handler_file = "#{webhook_name}_handler.rb"
         Dir.glob(File.join(File.dirname(__FILE__), "../../../**/*_handler.rb")) do |handler|
           if File.basename(handler) == webhook_handler_file
+            @existing_handler = true
             say %Q{
 #{'*' * 80}
 [WARNING] overriding an extising handler defined here: #{File.absolute_path handler}
