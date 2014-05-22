@@ -112,7 +112,7 @@ config.push_url = "http://mycustomurl"
 ## Create handler for a webhook
 
 ```shell
-bundle exec rails g wombat:webhook my_webhook
+bundle exec rails g spree_wombat:webhook my_webhook
 ```
 
 this will generate a handler class for the `my_webhook` webhook in `lib/spree/wombat/handler/my_webhook_handler.rb`
@@ -140,7 +140,7 @@ end
 ## Create custom serializers
 
 ```shell
-bundle exec rails g wombat:serializer Spree::Order MyOrderSerializer
+bundle exec rails g spree_wombat:serializer Spree::Order MyOrderSerializer
 ```
 
 This will generate a serializer for the provided model name, when the model is already configured in the `payload_builder` we use that serializer name as super class to inherit from. With active_model_serializer you also inherit the attributes so you can keep the existing configuration and only change that what's needed.
