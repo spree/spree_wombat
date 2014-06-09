@@ -4,6 +4,7 @@ module Spree
       class OrderHandlerBase < Base
 
         def self.order_params(order)
+          order['number'] = order.delete('id')
           order.delete('status')
           order.delete('totals')
 
