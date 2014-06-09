@@ -3,7 +3,6 @@ require 'spec_helper'
 module Spree
   module Wombat
     describe Handler::AddOrderHandler do
-
       let!(:country) { create(:country) }
       let!(:state) { country.states.first || create(:state, :country => country) }
 
@@ -25,6 +24,11 @@ module Spree
             expect{handler.process}.to change{Spree::Order.count}.by(1)
           end
 
+          it "sets number from order payload id" do
+            handler.process
+            expect(Order.last.number).to eq message['order']['id']
+          end
+
           it "returns a Hub::Responder" do
             responder = handler.process
             expect(responder.class.name).to eql "Spree::Wombat::Responder"
@@ -33,7 +37,6 @@ module Spree
           end
         end
       end
-
     end
   end
 end
