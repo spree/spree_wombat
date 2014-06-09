@@ -20,6 +20,10 @@ module Spree
           let!(:message) { ::Hub::Samples::Order.request }
           let(:handler) { Handler::AddOrderHandler.new(message.to_json) }
 
+          let(:line_item) { message['order']['line_items'].first }
+
+          before { create(:variant, sku: line_item['product_id']) }
+
           it "imports a new order in the storefront" do
             expect{handler.process}.to change{Spree::Order.count}.by(1)
           end
@@ -27,6 +31,11 @@ module Spree
           it "sets number from order payload id" do
             handler.process
             expect(Order.last.number).to eq message['order']['id']
+          end
+
+          it "creates line items properly" do
+            handler.process
+            expect(LineItem.last.variant.sku).to eq line_item['product_id']
           end
 
           it "returns a Hub::Responder" do

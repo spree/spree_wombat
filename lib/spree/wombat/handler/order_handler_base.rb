@@ -35,9 +35,11 @@ module Spree
           hash = {}
           order['line_items'].each_index do |i|
             hash[i.to_s] = order['line_items'][i]
+            hash[i.to_s]['sku'] = hash[i.to_s].delete 'product_id'
+            hash[i.to_s].delete 'name'
           end
           order.delete('line_items')
-          order['line_items_attributes'] = hash.delete("name")
+          order['line_items_attributes'] = hash
         end
 
         def self.prepare_adjustments(order)
