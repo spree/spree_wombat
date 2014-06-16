@@ -6,7 +6,7 @@ module Spree
 
       let(:responder) {Responder.new("12355","Order abc124 was added")}
 
-      it "correctly serializes a Hub::Responder" do
+      it "correctly serializes a Wombat::Responder" do
         json_response = "{\"request_id\":\"12355\",\"summary\":\"Order abc124 was added\"}"
         expect(ResponderSerializer.new(responder, root: false).to_json).to eql json_response
       end
@@ -20,11 +20,6 @@ module Spree
       it "serializes objects when present" do
         json_response = "{\"request_id\":\"12355\",\"summary\":\"Order abc124 was added\",\"objects\":{\"products\":{\"id\":\"abc\",\"name\":\"Epic awesome tiger pyjamas\"}}}"
         responder.objects = { products: {id: "abc", name: "Epic awesome tiger pyjamas"} }
-        expect(ResponderSerializer.new(responder, root: false).to_json).to eql json_response
-      end
-
-      it "will not serialize objects when it's nil" do
-        json_response = "{\"request_id\":\"12355\",\"summary\":\"Order abc124 was added\"}"
         expect(ResponderSerializer.new(responder, root: false).to_json).to eql json_response
       end
 

@@ -1,74 +1,41 @@
-require 'open-uri'
-
 module Spree
   module Wombat
     module Handler
       class UpdateProductHandler < ProductHandlerBase
 
         def process
-          id = params.delete(:id)
-          product = Spree::Variant.where(is_master: true, sku: params[:sku]).first.product
-          return response("Cannot find product with SKU #{params[:sku]}!", 500) unless product
+          id = @product_payload.delete(:id)
 
-          # Disable the after_touch callback on taxons
-          Spree::Product.skip_callback(:touch, :after, :touch_taxons)
+          parent_id = @product_payload.delete(:parent_id)
+          taxons = @product_payload.delete(:taxons)
+          option_types_params = @product_payload.delete(:options)
+          images = @product_payload.delete(:images)
+          shipping_category_name = @product_payload.delete(:shipping_category)
 
-          Spree::Product.transaction do
-            @product = process_root_product(product, root_product_attrs)
-            process_images(@product.master, @master_images)
-            process_child_products(@product, children_params) if @children_params
-          end
+          @product_payload[:taxon_ids] = prepare_taxons(taxons)
+          option_types = prepare_options(option_types_params)
+          @product_payload[:shipping_category_id] = prepare_shipping_category(shipping_category_name)
 
-          if @product.valid?
-            # set it again, and touch the product
-            Spree::Product.set_callback(:touch, :after, :touch_taxons)
-            @product.touch
-
-            if @product.variants.count > 0
-              response "Product #{@product.sku} updated, with child skus: #{@product.variants.pluck(:sku)}"
+          if parent_id
+            product = Spree::Product.where(id: parent_id).first
+            if product
+              product.variants.create({ product: product }.merge(@product_payload))
             else
-              response "Product #{@product.sku} updated"
+              return response "Parent product with id #{parent_id} not found!", 500
             end
           else
-            response "Cannot update the product due to validation errors", 500
+            product = Spree::Product.new(@product_payload)
           end
 
-        end
-
-        # the Spree::Product and Spree::Variant master
-        # it's the top level 'product'
-        def process_root_product(product, params)
-          product.update_attributes(params)
-          process_option_types(product, @root_options)
-          process_properties(product, @properties)
-
-          product
-        end
-
-        # adding variants to the product based on the children hash
-        def process_child_products(product, children)
-          return unless children.present?
-
-          children.each do |child_product|
-
-            # used for possible assembly feature.
-            quantity = child_product.delete(:quantity)
-
-            option_type_values = child_product.delete(:options)
-
-            child_product[:options] = option_type_values.collect {|k,v| {name: k, value: v} }
-
-            images = child_product.delete(:images)
-
-            variant = product.variants.find_by_sku(child_product[:sku])
-            if variant
-              variant.update_attributes(child_product)
-            else
-              variant = product.variants.create({ product: product }.merge(child_product))
+          if product.save
+            master_variant = product.master
+            option_types.each do |option_type|
+              product.option_types << option_type unless product.option_types.include?(option_type)
             end
-            process_images(variant, images)
+            response "Product (#{product.id}) and master variant (#{master_variant.id}) are added"
+          else
+            response "Could not save the Variant #{product.errors}", 500
           end
-
         end
 
       end

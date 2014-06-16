@@ -27,10 +27,6 @@ module Spree
         object.available_on.iso8601
       end
 
-      def permalink
-        object.slug
-      end
-
       def shipping_category
         object.shipping_category.name
       end

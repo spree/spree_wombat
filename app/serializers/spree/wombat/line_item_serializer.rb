@@ -3,7 +3,7 @@ require 'active_model/serializer'
 module Spree
   module Wombat
     class LineItemSerializer < ActiveModel::Serializer
-      attributes :product_id, :name, :quantity, :price
+      attributes :product_id, :quantity, :price
 
       def product_id
         object.variant.sku

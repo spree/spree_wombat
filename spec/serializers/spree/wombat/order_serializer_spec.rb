@@ -4,9 +4,21 @@ module Spree
   module Wombat
     describe OrderSerializer do
 
-      let!(:order) {create(:shipped_order)}
+      let!(:order) do
+        order = create(:completed_order_with_totals)
+        2.times do
+          create(:line_item, order: order)
+        end
+        order.update!
+        order.reload
+      end
+
       let(:serialized_order) do
         JSON.parse(OrderSerializer.new(order, root: false).to_json)
+      end
+
+      before do
+        order.update!
       end
 
       context "format" do
@@ -27,24 +39,17 @@ module Spree
 
           let(:totals) do
             {
-              "item"=> 50.0,
+              "item"=> 30.0,
               "adjustment"=> 0.0,
               "tax"=> 0.0,
-              "shipping"=> 100.0,
-              "payment"=> 150.0,
-              "order"=> 150.0
+              "shipping"=> 0.0,
+              "payment"=> 0.0,
+              "order"=> 30.0
             }
           end
 
           it "has all the amounts for the order" do
             expect(serialized_order["totals"]).to eql totals
-          end
-        end
-
-        context "adjustments key" do
-          it "shipment matches order shipping total value" do
-            shipping_hash = serialized_order["adjustments"].select { |a| a["name"] == "shipping" }.first
-            expect(shipping_hash["value"]).to eq order.shipment_total.to_f
           end
         end
       end

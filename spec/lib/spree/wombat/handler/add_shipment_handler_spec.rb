@@ -10,10 +10,17 @@ module Spree
 
         context "with all reference data present" do
 
-          let!(:order) { create(:order_with_line_items, number: message["shipment"]["order_id"]) }
-          let!(:stock_location) { create(:stock_location, name: 'default')}
+          let!(:order) do
+            order = create(:completed_order_with_totals, number: message["shipment"]["order_id"] )
+            2.times do
+              create(:line_item, order: order)
+            end
+            order.update!
+            order.reload
+          end
+
           let!(:shipping_method) { create(:shipping_method, name: 'UPS Ground (USD)')}
-          let!(:country) { create(:country) }
+          let!(:country) { Spree::Country.first }
           let!(:state) { create(:state, :country => country, name: "California", abbr: "CA") }
 
           before do

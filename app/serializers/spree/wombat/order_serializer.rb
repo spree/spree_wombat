@@ -53,11 +53,11 @@ module Spree
 
       private
         def shipping_total
-          object.shipment_total.to_f
+          object.ship_total.to_f
         end
 
         def tax_total
-          (object.included_tax_total + object.additional_tax_total).to_f
+          object.tax_total.to_f
         end
     end
   end
