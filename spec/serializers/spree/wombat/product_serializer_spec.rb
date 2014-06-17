@@ -20,11 +20,7 @@ module Spree
         it "serializes the available_on in ISO format" do
           expect(serialized_product["available_on"]).to match /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/
         end
-
-        it "serializes the slug as permalink" do
-          expect(serialized_product["permalink"]).to eql product.permalink
-        end
-
+        
         it "serializes the shipping category name as shipping_category" do
           expect(serialized_product["shipping_category"]).to eql product.shipping_category.name
         end
