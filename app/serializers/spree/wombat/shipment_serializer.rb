@@ -34,7 +34,7 @@ module Spree
       end
 
       def shipping_method
-        object.shipping_method.name
+        object.shipping_method.try(:name)
       end
 
       def updated_at
