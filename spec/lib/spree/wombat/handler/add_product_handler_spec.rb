@@ -133,8 +133,6 @@ module Spree
             it "will nest the taxons inside each other" do
               handler.add_taxon(parent, taxon_names)
               expect(parent.children.count).to eql 1
-              expect(parent.descendants.count).to eql 2
-              expect(parent.leaves.count).to eql 1
             end
           end
 
