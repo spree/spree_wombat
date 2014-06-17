@@ -8,7 +8,7 @@ module Spree
     }
 
     let(:parameters) {
-      { body: ::Hub::Samples::Order.request.to_json, use_route: :spree, format: :json, path: 'add_order'}
+      { body: ::Hub::Samples::Order.request.to_json, use_route: :spree, format: :json, path: 'my_custom'}
     }
 
     context '#consume' do
