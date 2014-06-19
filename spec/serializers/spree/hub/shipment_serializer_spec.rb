@@ -27,6 +27,10 @@ module Spree
         expect(serialized_shipment["status"]).to eql shipment.state
       end
 
+      it "sets the channel to spree" do
+        expect(serialized_shipment["channel"]).to eql "spree"
+      end
+
       it "serializes the stock_location.name as stock_location" do
         expect(shipment.stock_location.name).to_not eql nil
         expect(serialized_shipment["stock_location"]).to eql shipment.stock_location.name
