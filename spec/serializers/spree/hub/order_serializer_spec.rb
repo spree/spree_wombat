@@ -19,6 +19,10 @@ module Spree
           expect(serialized_order["status"]).to eql order.state
         end
 
+        it "sets the channel to spree" do
+          expect(serialized_order["channel"]).to eql "spree"
+        end
+
         it "set's the placed_on to completed_at date in ISO format" do
           expect(serialized_order["placed_on"]).to match /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/
         end
