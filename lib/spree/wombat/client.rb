@@ -18,7 +18,13 @@ module Spree
           touch_last_pushed(object)
         end
 
-        object.constantize.where("updated_at > ?", ts).find_in_batches(batch_size: 10) do |batch|
+        scope = object.constantize
+
+        if filter = payload_builder[:filter]
+          scope = scope.send(filter.to_sym)
+        end
+
+        scope.where("updated_at > ?", ts).find_in_batches(batch_size: 10) do |batch|
           object_count += batch.size
           payload = ActiveModel::ArraySerializer.new(
             batch,
