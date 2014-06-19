@@ -20,11 +20,14 @@ module Spree
           attrs = @shipment_payload.delete(:shipping_address)
           country_iso = attrs.delete(:country)
           country = Spree::Country.find_by_iso(country_iso)
+          raise Exception.new("Can't find country with ISO #{country_iso}") unless country
           attrs[:country_id] = country.id
 
           state_name = attrs.delete(:state)
           if state_name
             state = Spree::State.find_by_name(state_name)
+            state = Spree::State.find_by_abbr(state_name) unless state
+            raise Exception.new("Can't find state with name or abbr with: #{state_name}") unless state
             attrs[:state_id] = state.id
             attrs[:state_name] = state.name
           end
