@@ -25,8 +25,11 @@ module Spree
           if state_name
             state = Spree::State.find_by_name(state_name)
             state = Spree::State.find_by_abbr(state_name) unless state
-            return response("Can't find a State with name or abrr: #{state_name}!", 500) unless state
-            address_attributes[:state_id] = state.id
+            if state
+              address_attributes[:state_id] = state.id
+            else
+              address_attributes[:state_name] = state_name
+            end
           end
 
           shipment[:state] = shipment.delete(:status)

@@ -23,8 +23,12 @@ module Spree
             state_name = address_attributes.delete(:state)
             if state_name
               state = Spree::State.find_by_name(state_name)
-              return response("Can't find a State with name #{state_name}!", 500) unless state
-              address_attributes[:state_id] = state.id
+              state = Spree::State.find_by_abbr(state_name) unless state
+              if state
+                address_attributes[:state_id] = state.id
+              else
+                address_attributes[:state_name] = state_name
+              end
             end
 
             shipment_hsh[:address_attributes] = address_attributes
