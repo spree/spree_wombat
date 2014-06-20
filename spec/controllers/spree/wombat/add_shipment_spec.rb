@@ -7,22 +7,22 @@ module Spree
       {
   "shipment"=> {
     "id"=> "356195",
-    "order_id"=> "R061553187",
+    "order_id"=> "R063443587",
     "cost"=> "12.0",
     "status"=> nil,
     "shipping_method"=> "UPS Ground",
-    "tracking"=> "1ZA282180396244246",
+    "tracking"=> "1ZA282180433242244246",
     "shipped_at"=> "2014-06-08T22=>00=>00-07=>00",
     "shipping_address"=> {
-      "firstname"=> "Michael",
-      "lastname"=> "Bianco",
-      "address1"=> "300 Highland Ave",
-      "address2"=> "Michael Bianco",
-      "zipcode"=> "19335",
-      "city"=> "Downingtown",
+      "firstname"=> "John",
+      "lastname"=> "Do",
+      "address1"=> "199 Awesome Ave",
+      "address2"=> "",
+      "zipcode"=> "123456",
+      "city"=> "Awesometown",
       "state"=> "PA",
       "country"=> "US",
-      "phone"=> "4847534128"
+      "phone"=> "3424253345434"
     },
     "items"=> [
       {
