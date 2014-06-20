@@ -30,6 +30,25 @@ module Spree
             expect(responder.code).to eql 200
           end
 
+          context "finds state" do
+            context "by abbr" do
+
+              before do
+                shipping_address = message["shipment"]["shipping_address"]
+                shipping_address["state"] = "CA"
+                message["shipment"]["shipping_address"] = shipping_address
+              end
+
+              it "find a state by abbr" do
+                responder = handler.process
+                expect(responder.code).to eql 200
+                expect(order.reload.shipments.last.address.state).to eql state
+              end
+
+            end
+
+          end
+
         end
 
       end

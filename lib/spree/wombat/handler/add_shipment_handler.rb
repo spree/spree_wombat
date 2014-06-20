@@ -24,7 +24,8 @@ module Spree
           state_name = address_attributes.delete(:state)
           if state_name
             state = Spree::State.find_by_name(state_name)
-            return response("Can't find a State with name #{state_name}!", 500) unless state
+            state = Spree::State.find_by_abbr(state_name) unless state
+            return response("Can't find a State with name or abrr: #{state_name}!", 500) unless state
             address_attributes[:state_id] = state.id
           end
 
