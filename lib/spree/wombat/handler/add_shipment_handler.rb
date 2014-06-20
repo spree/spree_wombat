@@ -80,7 +80,6 @@ module Spree
           shipment_attributes = shipment.slice *Spree::Shipment.attribute_names
           shipment_attributes["inventory_units_attributes"] = inventory_units_attributes
           shipment_attributes["address_attributes"] = address_attributes
-          binding.pry
           shipment = Spree::Shipment.create!(shipment_attributes)
           shipment.shipping_methods << shipping_method
           shipment.refresh_rates
