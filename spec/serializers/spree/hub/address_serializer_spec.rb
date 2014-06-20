@@ -12,7 +12,7 @@ module Spree
       end
 
       it "serializes the state name" do
-        expect(JSON.parse(serialized_address)["state"]).to eql address.state.name
+        expect(JSON.parse(serialized_address)["state"]).to eql address.state.abbr
       end
 
     end

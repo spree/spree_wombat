@@ -12,9 +12,9 @@ module Spree
 
       def state
         if object.state
-          object.state.name
+          object.state.abbr
         else
-          nil
+          object.state_name
         end
       end
 
