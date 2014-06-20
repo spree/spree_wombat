@@ -29,8 +29,6 @@ module Spree
             address_attributes[:state_id] = state.id
           end
 
-          shipment[:address_attributes] = address_attributes
-
           shipment[:state] = shipment.delete(:status)
           email = shipment.delete(:email)
 
@@ -79,9 +77,11 @@ module Spree
           return response("Can't find variants with the following skus: #{missing_variants.join(', ')}", 500) unless missing_variants.empty?
           return response("Can't find line_items with the following skus: #{missing_line_items.join(', ')} in the order.", 500) unless missing_line_items.empty?
 
-          shipment[:inventory_units_attributes] = inventory_units_attributes
-
-          shipment = Spree::Shipment.create!(shipment)
+          shipment_attributes = shipment.slice *Spree::Shipment.attribute_names
+          shipment_attributes["inventory_units_attributes"] = inventory_units_attributes
+          shipment_attributes["address_attributes"] = address_attributes
+          binding.pry
+          shipment = Spree::Shipment.create!(shipment_attributes)
           shipment.shipping_methods << shipping_method
           shipment.refresh_rates
           shipment.save!
