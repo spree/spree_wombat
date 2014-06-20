@@ -4,9 +4,9 @@ module Spree
   module Wombat
     class ShipmentSerializer < ActiveModel::Serializer
       attributes :id, :order_id, :email, :cost, :status, :stock_location,
-                :shipping_method, :tracking, :updated_at, :shipped_at, :channel
+                :shipping_method, :tracking, :updated_at, :shipped_at, :channel, :address
 
-      has_one :address, serializer: AddressSerializer, root: "shipping_address"
+      has_one :ship_to, serializer: AddressSerializer, root: "shipping_address"
       has_many :line_items, serializer: LineItemSerializer, root: "items"
 
       def id
