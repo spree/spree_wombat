@@ -30,6 +30,23 @@ module Spree
             expect(responder.code).to eql 200
           end
 
+          context "attribute filtering" do
+            context "with non existing attribute on shipment" do
+
+              before do
+                shipment = message["shipment"]
+                shipment["note_value"] = "This is not used here"
+                message["shipment"] = shipment
+              end
+
+              it "will not blow up" do
+                responder = handler.process
+                expect(responder.summary).to match /Added shipment H.{11} for order R154085346/
+                expect(responder.code).to eql 200
+              end
+            end
+          end
+
           context "finds state" do
             context "by abbr" do
 

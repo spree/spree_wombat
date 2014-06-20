@@ -42,6 +42,10 @@ module Spree
           shipping_method = Spree::ShippingMethod.find_by_name(shipping_method_name)
           return response("Can't find a ShippingMethod with name #{shipping_method_name}!", 500) unless shipping_method
 
+          shipment_attributes = shipment_hsh.slice *Spree::Shipment.attribute_names
+          shipment_attributes["address_attributes"] = address_attributes
+
+
           # build the inventory units
           inventory_units_attributes = []
           missing_variants = []
@@ -78,9 +82,9 @@ module Spree
             return response("Can't find variants with the following skus: #{missing_variants.join(', ')}", 500) unless missing_variants.empty?
             return response("Can't find line_items with the following skus: #{missing_line_items.join(', ')} in the order.", 500) unless missing_line_items.empty?
 
-            shipment_hsh[:inventory_units_attributes] = inventory_units_attributes
+            shipment_attributes["inventory_units_attributes"] = inventory_units_attributes
           end
-          shipment.update(shipment_hsh)
+          shipment.update(shipment_attributes)
           shipment.shipping_methods << shipping_method unless shipment.shipping_methods.include? shipping_method
           shipment.refresh_rates
           shipment.save!
