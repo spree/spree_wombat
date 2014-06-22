@@ -50,8 +50,8 @@ module Spree
           shipment_state = shipment_hsh.delete(:status)
           shipment_attributes = shipment_hsh.slice *Spree::Shipment.attribute_names
           shipment_attributes["address_attributes"] = address_attributes
-          shipment_attributes["status"] = shipment_state
-          
+          shipment_attributes["state"] = shipment_state
+
           # build the inventory units
           inventory_units_attributes = []
           missing_variants = []
