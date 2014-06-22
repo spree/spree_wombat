@@ -46,12 +46,9 @@ module Spree
           shipping_method = Spree::ShippingMethod.find_by_name(shipping_method_name)
           return response("Can't find a ShippingMethod with name #{shipping_method_name}!", 500) unless shipping_method
 
-
-          shipment_state = shipment_hsh["status"]
+          shipment_attributes["status"] = shipment_hsh.delete(:status)
           shipment_attributes = shipment_hsh.slice *Spree::Shipment.attribute_names
           shipment_attributes["address_attributes"] = address_attributes
-
-          shipment_attributes["state"] = shipment_state
 
           # build the inventory units
           inventory_units_attributes = []
