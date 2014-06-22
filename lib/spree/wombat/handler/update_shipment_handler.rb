@@ -94,6 +94,7 @@ module Spree
           shipment.shipping_methods << shipping_method unless shipment.shipping_methods.include? shipping_method
           shipment.refresh_rates
           shipment.save!
+          shipment.order.update!
 
           return response("Updated shipment #{shipment_number}")
 
