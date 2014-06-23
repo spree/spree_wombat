@@ -37,6 +37,7 @@ module Spree
         {
           item: object.item_total.to_f,
           adjustment: object.adjustment_total.to_f,
+          discount: object.promo_total.to_f,
           tax: tax_total,
           shipping: shipping_total,
           payment: object.payments.completed.sum(:amount).to_f,
