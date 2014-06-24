@@ -71,16 +71,9 @@ module Spree
                 missing_line_items << sku
                 next
               end
-              # quantity = shipping_item[:quantity]
-              # quantity.times do
-              #   inventory_unit = {
-              #     variant_id: variant.id,
-              #     order_id: shipment.order.id,
-              #     line_item_id: line_item_id
-              #   }
-              #   inventory_units_attributes << inventory_unit
-              # end
             end
+
+            return response("The items count does not match the order line items count", 500) if shipment.order.line_items.count != shipping_items.count
 
             return response("Can't find variants with the following skus: #{missing_variants.join(', ')}", 500) unless missing_variants.empty?
             return response("Can't find line_items with the following skus: #{missing_line_items.join(', ')} in the order.", 500) unless missing_line_items.empty?
