@@ -45,28 +45,6 @@ module Spree
 
           product
         end
-
-        # adding variants to the product based on the children hash
-        def process_child_products(product, children)
-          return unless children.present?
-
-          children.each do |child_product|
-
-            # used for possible assembly feature.
-            quantity = child_product.delete(:quantity)
-
-            option_type_values = child_product.delete(:options)
-
-            child_product[:options] = option_type_values.collect {|k,v| {name: k, value: v} }
-
-            images = child_product.delete(:images)
-
-            variant = product.variants.create({ product: product }.merge(child_product))
-            process_images(variant, images)
-          end
-
-        end
-
       end
     end
   end
