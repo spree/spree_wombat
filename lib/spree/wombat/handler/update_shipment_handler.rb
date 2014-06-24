@@ -71,15 +71,15 @@ module Spree
                 missing_line_items << sku
                 next
               end
-              quantity = shipping_item[:quantity]
-              quantity.times do
-                inventory_unit = {
-                  variant_id: variant.id,
-                  order_id: shipment.order.id,
-                  line_item_id: line_item_id
-                }
-                inventory_units_attributes << inventory_unit
-              end
+              # quantity = shipping_item[:quantity]
+              # quantity.times do
+              #   inventory_unit = {
+              #     variant_id: variant.id,
+              #     order_id: shipment.order.id,
+              #     line_item_id: line_item_id
+              #   }
+              #   inventory_units_attributes << inventory_unit
+              # end
             end
 
             return response("Can't find variants with the following skus: #{missing_variants.join(', ')}", 500) unless missing_variants.empty?
@@ -88,10 +88,10 @@ module Spree
             shipment_attributes["inventory_units_attributes"] = inventory_units_attributes
           end
           shipment.update(shipment_attributes)
+          shipment.state = shipment_attributes[:state]
           shipment.shipping_methods << shipping_method unless shipment.shipping_methods.include? shipping_method
           shipment.refresh_rates
           shipment.save!
-          shipment.order.update!
 
           return response("Updated shipment #{shipment_number}")
 
