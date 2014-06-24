@@ -315,7 +315,6 @@ module Spree
         context "product with children" do
           let(:message) {::Hub::Samples::Product.request}
           let(:handler) { Handler::AddProductHandler.new(message.to_json) }
-          let(:product) { Spree::Variant.find_by_sku(message["product"]["sku"]).product}
 
           it "will add variants to the product" do
             # 1 variant as the master, and 1 from the children hash
@@ -325,6 +324,13 @@ module Spree
           it "will assign the correct product" do
             handler.process
             expect(product.variants.count).to be 1
+          end
+
+          it "sets the correct attributes" do
+            handler.process
+            variant = Spree::Variant.find_by_sku("SPREE-T-SHIRT-S")
+            expect(variant).to_not be_nil
+            expect(variant.price.to_f).to eql 39.99
           end
 
           it "returns the correct response" do
