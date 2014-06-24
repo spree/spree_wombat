@@ -5,51 +5,59 @@ module Spree
 
         def self.order_params(order)
           order['number'] = order.delete('id')
-          order.delete('status')
-          order.delete('totals')
 
-          prepare_address(order, 'shipping_address', 'ship_address_attributes')
-          prepare_address(order, 'billing_address', 'bill_address_attributes')
+          shipping_address_hash = order.delete('shipping_address')
+          billing_address_hash = order.delete('billing_address')
 
-          order['payments_attributes'] = order.fetch('payments', [])
-          order.delete('payments')
-          order['completed_at'] = order.delete('placed_on') if order.has_key?('placed_on')
+          prepare_address(shipping_address_hash, 'ship_address_attributes')
+          prepare_address(billing_address_hash, 'bill_address_attributes')
 
-          prepare_adjustments order
-          rehash_line_items order
+          payments_attributes = order.fetch('payments', [])
+          placed_on = order.delete('placed_on')
 
+          adjustments_attributes_hash = prepare_adjustments order.fetch('adjustments', [])
+          line_items_hash = rehash_line_items order['line_items']
+
+          order = order.slice *Spree::Order.attribute_names
+
+          order['ship_address_attributes'] = shipping_address_hash
+          order['bill_address_attributes'] = billing_address_hash
+
+          order['line_items_attributes'] = line_items_hash
+          order['adjustments_attributes'] = adjustments_attributes_hash
+
+          order['payments_attributes'] = payments_attributes
+          order['completed_at'] = placed_on
           order
         end
 
         private
-        def self.prepare_address(order, source_key, target_key)
-          order[target_key] = order.delete(source_key)
-          order[target_key]['country'] = {
-            'iso' => order[target_key]['country'].upcase }
+        def self.prepare_address(address_hash, target_key)
+          address_hash['country'] = {
+            'iso' => address_hash['country'].upcase }
 
-          order[target_key]['state'] = {
-            'name' => order[target_key]['state'].capitalize }
+          address_hash['state'] = {
+            'name' => address_hash['state'].capitalize }
         end
 
-        def self.rehash_line_items(order)
+        def self.rehash_line_items(line_items)
           hash = {}
-          order['line_items'].each_index do |i|
-            hash[i.to_s] = order['line_items'][i]
+          line_items.each_index do |i|
+            hash[i.to_s] = line_items[i]
             hash[i.to_s]['sku'] = hash[i.to_s].delete 'product_id'
             hash[i.to_s].delete 'name'
           end
-          order.delete('line_items')
-          order['line_items_attributes'] = hash
+          hash
         end
 
-        def self.prepare_adjustments(order)
-          order['adjustments_attributes'] = order.fetch('adjustments', []).map do |adjustment|
-            adjustment['label'] = adjustment.delete('name') if adjustment.has_key?('name')
-            adjustment['amount'] = adjustment.delete('value') if adjustment.has_key?('value')
-            adjustment
+        def self.prepare_adjustments(adjustments)
+          adjustments.map do |adjustment|
+              adjustment['label'] = adjustment.delete('name') if adjustment.has_key?('name')
+              adjustment['amount'] = adjustment.delete('value') if adjustment.has_key?('value')
+              adjustment
           end
-          order.delete('adjustments')
         end
+
       end
     end
   end

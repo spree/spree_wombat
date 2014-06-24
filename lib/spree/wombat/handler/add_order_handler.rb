@@ -4,7 +4,8 @@ module Spree
       class AddOrderHandler < OrderHandlerBase
 
         def process
-          order = Spree::Core::Importer::Order.import(find_spree_user, OrderHandlerBase.order_params(@payload[:order]))
+          order_params = OrderHandlerBase.order_params(@payload[:order])
+          order = Spree::Core::Importer::Order.import(find_spree_user,order_params)
           response "Order number #{order.number} was added"
         end
 
