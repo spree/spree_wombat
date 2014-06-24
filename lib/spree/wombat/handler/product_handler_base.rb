@@ -13,7 +13,6 @@ module Spree
 
           @params = @payload[:product]
           @children_params = @params.delete(:variants)
-
           #posible master images
           @master_images = @params.delete(:images)
           @taxon_ids = []
@@ -27,8 +26,15 @@ module Spree
           @properties = @params.delete(:properties)
 
           @params[:slug] = permalink if permalink.present?
-          @params[:taxon_ids] = Spree::Taxon.where(id: @taxon_ids).leaves.pluck(:id)
           @params[:shipping_category_id] = process_shipping_category(shipping_category_name)
+
+          # get the price, since this is a virtual attribute and not in the attribute_names
+          price = @params[:price]
+          sku = @params[:sku]
+          @params = @params.slice *Spree::Product.attribute_names
+          @params[:taxon_ids] = Spree::Taxon.where(id: @taxon_ids).leaves.pluck(:id)
+          @params[:price] = price
+          @params[:sku] = sku
           @params
         end
 
