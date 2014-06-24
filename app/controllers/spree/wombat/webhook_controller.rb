@@ -30,7 +30,7 @@ module Spree
 
       def save_request_data
         @called_hook = params[:path]
-        @webhook_body = request[:body]
+        @webhook_body = request.body.read
       end
 
     end
