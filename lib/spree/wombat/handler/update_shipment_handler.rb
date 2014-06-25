@@ -74,7 +74,13 @@ module Spree
               end
             end
 
-            #return response("The items count does not match the order line items count", 500) if shipment.order.line_items.count != shipping_items.count
+            # check on items sku and quantity
+            shipment_lines = shipment.line_items.map { |li| {sku: li.variant.sku, quantity: li.quantity} }
+            received_shipping_items = shipping_items.map { |item| {sku: item[:product_id], quantity: item[:quantity]} }
+
+            shipping_items_diff = received_shipping_items - shipment_lines
+
+            return response("The received shipment items do not match with the shipment, diff: #{shipping_items_diff}", 500) unless shipping_items_diff.empty?
 
             return response("Can't find variants with the following skus: #{missing_variants.join(', ')}", 500) unless missing_variants.empty?
             return response("Can't find line_items with the following skus: #{missing_line_items.join(', ')} in the order.", 500) unless missing_line_items.empty?

@@ -10,7 +10,9 @@ module Spree
 
         context "with all reference data present" do
 
-          let!(:order) { create(:order_with_line_items, number: message['shipment']['order_id']) }
+          let!(:order) { create(:order, number: message['shipment']['order_id']) }
+          let!(:variant) { create(:variant, sku: "SPREE-T-SHIRT")}
+          let!(:line_item) { create(:line_item, order: order, variant: variant)}
           let!(:stock_location) { create(:stock_location, name: 'default')}
           let!(:shipping_method) { create(:shipping_method, name: 'UPS Ground (USD)')}
           let!(:country) { create(:country) }
@@ -19,7 +21,7 @@ module Spree
           let!(:shipment) { create(:shipment, number: message['shipment']['id'], order: order)}
 
           before do
-            Spree::Variant.stub(:find_by_sku).and_return(order.variants.first)
+            #Spree::Variant.stub(:find_by_sku).and_return(order.variants.first)
             #don't want to trigger a state transition for this example
             message['shipment']['status'] = 'pending'
           end
@@ -28,6 +30,20 @@ module Spree
             responder = handler.process
             expect(responder.summary).to eql "Updated shipment #{shipment.number}"
             expect(responder.code).to eql 200
+          end
+
+          context "with mismatching items in shipment" do
+
+            before do
+              line_item.quantity = 2
+              line_item.save
+            end
+
+            it "will return an error message with the mismatch diff" do
+              responder = handler.process
+              expect(responder.summary).to match /The received shipment items do not match with the shipment, diff:/
+              expect(responder.code).to eql 500
+            end
           end
 
           context "including a valid state transition" do
