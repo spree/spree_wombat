@@ -50,8 +50,6 @@ module Spree
           shipment_attributes = shipment_hsh.slice *Spree::Shipment.attribute_names
           shipment_attributes["address_attributes"] = address_attributes
 
-          # build the inventory units
-          inventory_units_attributes = []
           missing_variants = []
           missing_line_items = []
 
@@ -85,7 +83,6 @@ module Spree
             return response("Can't find variants with the following skus: #{missing_variants.join(', ')}", 500) unless missing_variants.empty?
             return response("Can't find line_items with the following skus: #{missing_line_items.join(', ')} in the order.", 500) unless missing_line_items.empty?
 
-            shipment_attributes["inventory_units_attributes"] = inventory_units_attributes
           end
 
           # check if a state transition is required, and search for correct event to fire
