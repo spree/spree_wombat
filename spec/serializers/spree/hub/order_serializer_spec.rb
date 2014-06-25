@@ -48,7 +48,7 @@ module Spree
 
         context "adjustments key" do
           it "shipment matches order shipping total value" do
-            shipping_hash = serialized_order["adjustments"].select { |a| a["name"] == "shipping" }.first
+            shipping_hash = serialized_order["adjustments"].select { |a| a["name"] == "Shipping" }.first
             expect(shipping_hash["value"]).to eq order.shipment_total.to_f
           end
         end

@@ -50,10 +50,9 @@ module Spree
       end
 
       def adjustments
-        [
-          { name: "tax", value: tax_total },
-          { name: "shipping", value: shipping_total }
-        ]
+        object.all_adjustments.closed.collect do |adjustment|
+          { name: adjustment.label, value: adjustment.amount.to_f}
+        end << { name: "Shipping", value: shipping_total }
       end
 
       private
