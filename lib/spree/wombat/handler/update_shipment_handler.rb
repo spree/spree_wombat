@@ -34,7 +34,8 @@ module Spree
             shipment_hsh[:address_attributes] = address_attributes
           end
 
-          shipment_hsh[:state] = shipment_hsh.delete(:status)
+
+          target_state = shipment_hsh.delete(:status)
           email = shipment_hsh.delete(:email)
 
           stock_location_name = shipment_hsh.delete(:stock_location)
@@ -73,15 +74,32 @@ module Spree
               end
             end
 
-            return response("The items count does not match the order line items count", 500) if shipment.order.line_items.count != shipping_items.count
+            #return response("The items count does not match the order line items count", 500) if shipment.order.line_items.count != shipping_items.count
 
             return response("Can't find variants with the following skus: #{missing_variants.join(', ')}", 500) unless missing_variants.empty?
             return response("Can't find line_items with the following skus: #{missing_line_items.join(', ')} in the order.", 500) unless missing_line_items.empty?
 
             shipment_attributes["inventory_units_attributes"] = inventory_units_attributes
           end
+
+          # check if a state transition is required, and search for correct event to fire
+          transition = nil
+
+          if shipment.state != target_state
+            unless transition = shipment.state_transitions.detect { |trans| trans.to == target_state }
+              return response("Cannot transition shipment from current state: '#{shipment.state}' to requested state: '#{target_state}', no transition found.", 500)
+            end
+          end
+
+          #update attributes
           shipment.update(shipment_attributes)
-          shipment.state = shipment_attributes[:state]
+
+          #fire state transition
+          if transition
+            shipment.fire_state_event(transition.event)
+          end
+
+
           shipment.shipping_methods << shipping_method unless shipment.shipping_methods.include? shipping_method
           shipment.refresh_rates
           shipment.save!

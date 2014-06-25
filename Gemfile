@@ -8,5 +8,6 @@ group :test do
   gem "pry"
   gem "pry-debugger"
 end
+gem 'byebug'
 
 gemspec
