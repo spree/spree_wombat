@@ -77,9 +77,9 @@ Spree::Wombat::Config[:last_pushed_timestamps] = timestamps
 
 This will update the preference in the database and will use your updated timestamp for, in this case, 'Spree::Order'
 
-## Push to the hub
+## Push to Wombat
 
-To push objects to the hub we provide you with the following rake task:
+To push objects to Wombat we provide you with the following rake task:
 
 ```shell
 bundle exec rake wombat:push_it
