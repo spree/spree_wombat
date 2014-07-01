@@ -298,7 +298,7 @@ module Spree
             it "will assign the taxons" do
               expect(product.taxons.count).to eql 3
               product.taxons.each do |taxon|
-                expect(taxon.leaf?).to be_true
+                expect(taxon.leaf?).to be true
               end
               expect(product.taxons.pluck(:name)).to eql ["T-Shirts", "Spree", "Open Source"]
             end
