@@ -3,6 +3,6 @@ Spree::Order.class_eval do
 
   private
   def touch_shipments
-    self.shipments.collect &:touch
+    self.shipments.update_all(updated_at: Time.now)
   end
 end
