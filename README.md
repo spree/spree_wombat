@@ -7,7 +7,7 @@ Connect your SpreeCommerce Storefront to Wombat, providing push API and webhook 
 Add spree_wombat to your Gemfile:
 
 ```ruby
-gem 'spree_wombat', git: 'git@github.com:spree/spree_wombat.git', branch: '2-2-stable'
+gem 'spree_wombat', git: 'git@github.com:spree/spree_wombat.git', branch: '2-3-stable'
 ```
 
 Bundle your dependencies and run the installation generator:
@@ -56,7 +56,7 @@ The payload builder is a hash, the key is the model name we also use in the `pus
 
 Each model has a `serializer` and a `root` field that defines the serializer we use to serialize to JSON and the root defines the root node for that JSON.
 
-We have defined serializers for the default objects, you can find them [here](https://github.com/spree/spree_wombat/tree/2-2-stable/app/serializers/spree/wombat)
+We have defined serializers for the default objects, you can find them [here](https://github.com/spree/spree_wombat/tree/2-3-stable/app/serializers/spree/wombat)
 
 To push other objects to Wombat, you only need to add an entry in the `push_objects` and the `payload_builder` configurations.
 
