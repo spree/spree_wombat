@@ -10,13 +10,10 @@ module Spree
       def self.push_batches(object)
         object_count = 0
 
-        ts = Spree::Wombat::Config[:last_pushed_timestamps][object]
-        payload_builder = Spree::Wombat::Config[:payload_builder][object]
+        last_push_time = Spree::Wombat::Config[:last_pushed_timestamps][object] || Time.now
+        this_push_time = touch_last_pushed(object)
 
-        unless ts
-          ts = Time.now
-          touch_last_pushed(object)
-        end
+        payload_builder = Spree::Wombat::Config[:payload_builder][object]
 
         scope = object.constantize
 
@@ -24,7 +21,7 @@ module Spree
           scope = scope.send(filter.to_sym)
         end
 
-        scope.where("updated_at > ?", ts).find_in_batches(batch_size: 10) do |batch|
+        scope.where("updated_at > ? AND updated_at <= ?", last_push_time, this_push_time).find_in_batches(batch_size: 10) do |batch|
           object_count += batch.size
           payload = ActiveModel::ArraySerializer.new(
             batch,
@@ -33,7 +30,6 @@ module Spree
           ).to_json
 
           push(payload)
-          touch_last_pushed(object)
         end
         object_count
       end
@@ -58,6 +54,7 @@ module Spree
         last_pushed_ts = Spree::Wombat::Config[:last_pushed_timestamps]
         last_pushed_ts[object] = Time.now
         Spree::Wombat::Config[:last_pushed_timestamps] = last_pushed_ts
+        last_pushed_ts[object]
       end
 
     end
