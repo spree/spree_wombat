@@ -15,6 +15,16 @@ module Spree
         expect(JSON.parse(serialized_address)["state"]).to eql address.state.name
       end
 
+      context "when address has state_name, but not state" do
+        before do
+          address.state = nil
+          address.state_name = 'Victoria'
+        end
+
+        it "uses state_name" do
+         expect(JSON.parse(serialized_address)["state"]).to eql address.state_name
+        end
+      end
     end
   end
 end
