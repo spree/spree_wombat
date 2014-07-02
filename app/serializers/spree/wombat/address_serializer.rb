@@ -14,7 +14,7 @@ module Spree
         if object.state
           object.state.name
         else
-          nil
+          object.state_name
         end
       end
 
