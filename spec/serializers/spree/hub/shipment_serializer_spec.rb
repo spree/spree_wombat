@@ -4,7 +4,7 @@ module Spree
   module Wombat
     describe ShipmentSerializer do
 
-      let(:shipment) { create(:shipment, order: create(:order_with_line_items)) }
+      let(:shipment) { create(:shipment, address: create(:address), order: create(:order_with_line_items)) }
       let(:serialized_shipment) { JSON.parse (ShipmentSerializer.new(shipment, root: false).to_json) }
 
       it "serializes the number as id" do
