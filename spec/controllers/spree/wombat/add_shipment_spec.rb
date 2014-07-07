@@ -5,44 +5,43 @@ module Spree
 
     let!(:message) {
       {
-  "shipment"=> {
-    "id"=> "356195",
-    "order_id"=> "R063443587",
-    "cost"=> "12.0",
-    "status"=> nil,
-    "shipping_method"=> "UPS Ground",
-    "tracking"=> "1ZA282180433242244246",
-    "shipped_at"=> "2014-06-08T22=>00=>00-07=>00",
-    "shipping_address"=> {
-      "firstname"=> "John",
-      "lastname"=> "Do",
-      "address1"=> "199 Awesome Ave",
-      "address2"=> "",
-      "zipcode"=> "123456",
-      "city"=> "Awesometown",
-      "state"=> "PA",
-      "country"=> "US",
-      "phone"=> "3424253345434"
-    },
-    "items"=> [
-      {
-        "name"=> "Oremus-StarterPack",
-        "product_id"=> "Oremus-StarterPack",
-        "quantity"=> 1
-      },
-      {
-        "name"=> "Oremus-3DVD",
-        "product_id"=> "Oremus-3DVD",
-        "quantity"=> 2
+        "shipment"=> {
+          "id"=> "356195",
+          "order_id"=> "R063443587",
+          "cost"=> "12.0",
+          "status"=> "shipped",
+          "shipping_method"=> "UPS Ground",
+          "tracking"=> "1ZA282180433242244246",
+          "shipped_at"=> "2014-06-08T22=>00=>00-07=>00",
+          "shipping_address"=> {
+            "firstname"=> "John",
+            "lastname"=> "Do",
+            "address1"=> "199 Awesome Ave",
+            "address2"=> "",
+            "zipcode"=> "123456",
+            "city"=> "Awesometown",
+            "state"=> "PA",
+            "country"=> "US",
+            "phone"=> "3424253345434"
+          },
+          "items"=> [
+            {
+              "name"=> "Oremus-StarterPack",
+              "product_id"=> "Oremus-StarterPack",
+              "quantity"=> 1
+            },
+            {
+              "name"=> "Oremus-3DVD",
+              "product_id"=> "Oremus-3DVD",
+              "quantity"=> 2
+            }
+          ]
+        }
       }
-    ]
-  }
-}
-
     }
 
     let(:parameters) {
-      { body: message.to_json, use_route: :spree, format: :json, path: 'add_shipment'}
+      { body: message, use_route: :spree, format: :json, path: 'add_shipment'}
     }
 
     let!(:order) do
@@ -56,10 +55,10 @@ module Spree
 
     let!(:shipping_method) { create(:shipping_method, name: 'UPS Ground (USD)')}
     let!(:country) { Spree::Country.first }
-    let!(:state) { create(:state, :country => country, name: "Pennsylvania", abbr: "PA") }
 
     before do
       Spree::Variant.stub(:find_by_sku).and_return(order.variants.first)
+      ActionController::TestRequest.any_instance.stub(:body) { StringIO.new(message.to_json) }
     end
 
 
@@ -72,10 +71,25 @@ module Spree
         end
 
         context 'and an existing handler for the webhook' do
+
+          let!(:state) { create(:state, :country => country, name: "Pennsylvania", abbr: "PA") }
+
           it 'will process the webhook handler' do
             post 'consume', parameters
             json = JSON.parse(response.body)
-            binding.pry
+            expect(response).to be_success
+          end
+        end
+
+        context 'with unknown address state_name and country does not require a state' do
+
+          before do
+            Spree::Country.any_instance.stub(:states_required) { false }
+          end
+
+          it 'will succesfully process the webhook handler' do
+            post 'consume', parameters
+            json = JSON.parse(response.body)
             expect(response).to be_success
           end
         end

@@ -27,9 +27,14 @@ module Spree
           if state_name
             state = Spree::State.find_by_name(state_name)
             state = Spree::State.find_by_abbr(state_name) unless state
-            raise Exception.new("Can't find state with name or abbr with: #{state_name}") unless state
-            attrs[:state_id] = state.id
-            attrs[:state_name] = state.name
+
+            if state
+              attrs[:state_id] = state.id
+              attrs[:state_name] = state.name
+            else
+              attrs[:state_name] = state_name
+            end
+
           end
           attrs
         end
