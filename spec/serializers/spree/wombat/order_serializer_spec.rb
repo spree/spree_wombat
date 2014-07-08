@@ -41,6 +41,7 @@ module Spree
             {
               "item"=> 30.0,
               "adjustment"=> 0.0,
+              "discount" => 0.0,
               "tax"=> 0.0,
               "shipping"=> 0.0,
               "payment"=> 0.0,
