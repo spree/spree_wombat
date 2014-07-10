@@ -90,7 +90,6 @@ module Spree
           it 'will succesfully process the webhook handler' do
             post 'consume', parameters
             json = JSON.parse(response.body)
-            binding.pry
             expect(response).to be_success
           end
         end
