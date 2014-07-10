@@ -12,7 +12,7 @@ module Spree
       has_many :variants, serializer: Spree::Wombat::VariantSerializer
 
       def id
-        object.sku
+        object.sku.present? ? object.sku : object.id
       end
 
       def price
@@ -24,7 +24,7 @@ module Spree
       end
 
       def available_on
-        object.available_on.iso8601
+        object.available_on.try(:iso8601)
       end
 
       def permalink
