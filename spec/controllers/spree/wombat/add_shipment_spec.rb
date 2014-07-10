@@ -9,7 +9,7 @@ module Spree
     "id"=> "356195",
     "order_id"=> "R063443587",
     "cost"=> "12.0",
-    "status"=> nil,
+    "status"=> "shipped",
     "shipping_method"=> "UPS Ground",
     "tracking"=> "1ZA282180433242244246",
     "shipped_at"=> "2014-06-08T22=>00=>00-07=>00",
@@ -42,7 +42,7 @@ module Spree
     }
 
     let(:parameters) {
-      { body: message.to_json, use_route: :spree, format: :json, path: 'add_shipment'}
+      { body: message, use_route: :spree, format: :json, path: 'add_shipment'}
     }
 
     let!(:order) do
@@ -60,6 +60,7 @@ module Spree
 
     before do
       Spree::Variant.stub(:find_by_sku).and_return(order.variants.first)
+      ActionController::TestRequest.any_instance.stub(:body) { StringIO.new(message.to_json) }
     end
 
 
@@ -75,7 +76,6 @@ module Spree
           it 'will process the webhook handler' do
             post 'consume', parameters
             json = JSON.parse(response.body)
-            binding.pry
             expect(response).to be_success
           end
         end

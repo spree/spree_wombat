@@ -8,8 +8,12 @@ module Spree
     }
 
     let(:parameters) {
-      { body: ::Hub::Samples::Order.request.to_json, use_route: :spree, format: :json, path: 'my_custom'}
+      { body: message.to_json, use_route: :spree, format: :json, path: 'my_custom'}
     }
+
+    before do
+      ActionController::TestRequest.any_instance.stub(:body) { StringIO.new(message.to_json) }
+    end
 
     context '#consume' do
 
@@ -38,7 +42,7 @@ module Spree
 
         context 'when an exception happens' do
           it 'will return resonse with the exception message and backtrace' do
-            parameters = { body: message, use_route: :spree, format: :json, path: 'upblate_order', content_type: 'application/json' }
+            parameters = { body: message, path: 'upblate_order', content_type: 'application/json', use_route: :spree, format: :json }
             post 'consume', parameters
             expect(response.code).to eql "500"
             json = JSON.parse(response.body)
