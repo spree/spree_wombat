@@ -35,18 +35,20 @@ module Spree
       end
 
       def self.push(json_payload)
-        HTTParty.post(
-          Spree::Wombat::Config[:push_url],
-          {
-            body: json_payload,
-            headers: {
-             'Content-Type'       => 'application/json',
-             'X-Hub-Store'        => Spree::Wombat::Config[:connection_id],
-             'X-Hub-Access-Token' => Spree::Wombat::Config[:connection_token],
-             'X-Hub-Timestamp'    => Time.now.utc.to_i.to_s
-            }
-          }
-        )
+        res = HTTParty.post(
+                Spree::Wombat::Config[:push_url],
+                {
+                  body: json_payload,
+                  headers: {
+                   'Content-Type'       => 'application/json',
+                   'X-Hub-Store'        => Spree::Wombat::Config[:connection_id],
+                   'X-Hub-Access-Token' => Spree::Wombat::Config[:connection_token],
+                   'X-Hub-Timestamp'    => Time.now.utc.to_i.to_s
+                  }
+                }
+              )
+
+        validate(res)
       end
 
       private
@@ -57,6 +59,11 @@ module Spree
         last_pushed_ts[object]
       end
 
+      def self.validate(res)
+        raise PushApiError, "Push not successful. Wombat returned response code #{res.code}" if res.code != 202
+      end
     end
   end
 end
+
+class PushApiError < StandardError; end
