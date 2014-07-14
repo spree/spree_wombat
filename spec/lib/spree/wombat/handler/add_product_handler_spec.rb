@@ -6,7 +6,7 @@ module Spree
 
       let(:message) { ::Hub::Samples::Product.request }
       let(:handler) { Handler::AddProductHandler.new(message.to_json) }
-      let(:product) { Spree::Variant.find_by_sku(message["product"]["sku"]).product}
+      let(:product) { Spree::Variant.find_by_sku(message["product"]["sku"]).product }
 
       describe ".process_taxons" do
         # taxons are stored as breadcrumbs in an nested array.
