@@ -32,6 +32,7 @@ module Spree
           price = @params[:price]
           sku = @params[:sku]
           @params = @params.slice *Spree::Product.attribute_names
+          @params.delete(:id) # Reject ID as it should be set by database or else it could convert to 0 in postgresql.
           @params[:taxon_ids] = Spree::Taxon.where(id: @taxon_ids).leaves.pluck(:id)
           @params[:price] = price
           @params[:sku] = sku
