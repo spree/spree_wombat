@@ -103,7 +103,7 @@ module Spree
 
           images.each do |image_hsh|
             image = variant.images.create
-            image.attachment = open(image_hsh["url"])
+            image.attachment = open(URI.parse(URI.encode(image_hsh["url"].strip)))
             image.position = image_hsh["position"]
             image.alt = image_hsh["title"]
             image.save!
