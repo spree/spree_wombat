@@ -36,7 +36,7 @@ module Spree
       end
 
       def taxons
-        object.taxons.collect {|t| t.root.self_and_descendants.collect(&:name)}
+        object.taxons.collect {|t| t.self_and_ancestors.collect(&:name)}
       end
 
       def options
