@@ -36,15 +36,27 @@ module Spree
         end
 
         context "taxons" do
-          let(:taxon)    { create(:taxon, name: 't-shirts', :parent => create(:taxon, name: 'Categories')) }
+
+          let!(:taxonomy)     { create(:taxonomy, name: 'Categories')}
+          let(:taxon_shirts)  { create(:taxon, name: 't-shirts', :taxonomy => taxonomy, :parent => taxonomy.root ) }
+          let(:taxon_hats)    { create(:taxon, name: 'hats', :taxonomy => taxonomy, :parent => taxonomy.root) }
+          let(:taxon_awesomehats) { create(:taxon, name: 'awesome hats', :taxonomy => taxonomy, :parent => taxon_hats) }
+          let(:taxon_rings)   { create(:taxon, name: 'rings', :taxonomy => taxonomy, :parent => taxonomy.root) }
+
           let(:taxon2)   { create(:taxon, name: 'modern') }
 
           before do
-            product.stub :taxons => [taxon, taxon2]
+            product.stub :taxons => [taxon_shirts, taxon_hats, taxon_awesomehats, taxon_rings, taxon2]
           end
 
           it "serailizes the taxons as nested arrays" do
-            expect(serialized_product["taxons"]).to eql [["Categories", "t-shirts"], ["modern"]]
+            expect(serialized_product["taxons"]).to eql [
+              ["Categories", "t-shirts"],
+              ["Categories", "hats"],
+              ["Categories", "hats", "awesome hats"],
+              ["Categories","rings"],
+              ["modern"]
+            ]
           end
 
         end
