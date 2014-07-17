@@ -341,6 +341,21 @@ module Spree
             expect(responder.summary).to eql "Product #{message["product"]["id"]} added, with child skus: #{product.variants.pluck(:sku)}"
           end
 
+          context "with no options hash on product" do
+            let(:message) do
+              msg = ::Hub::Samples::Product.request
+              msg["product"].delete("options")
+              msg
+            end
+
+            it "adds the correct option types on the variant" do
+              responder = handler.process
+              variant = Spree::Variant.find_by_sku("SPREE-T-SHIRT-S")
+              expect(variant).to_not be_nil
+              expect(variant.option_values.collect(&:name)).to eql ["GREY", "S"]
+            end
+          end
+
         end
       end
 
