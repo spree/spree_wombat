@@ -180,7 +180,8 @@ module Spree
 
         context "with invalid image url" do
           it "will raise an exception" do
-            expect{handler.process_images(variant,images)}.to raise_error
+            images.first["url"] = "http://so wrong . com"
+            expect { handler.process_images(variant, images) }.to raise_error
           end
         end
       end
@@ -246,14 +247,14 @@ module Spree
           property_names = ["material", "fit"]
           values = ["cotton", "smart fit"]
           handler.process_properties(product,properties)
+
           expect(product.properties.count).to eql 2
-          expect(product.properties.collect(&:name)).to eql property_names
+          expect(product.properties.collect(&:name)).to match_array property_names
+
           property_names.each_with_index do |p,i|
             expect(product.property(p)).to eql values[i]
           end
-
         end
-
       end
 
       describe "#process" do
