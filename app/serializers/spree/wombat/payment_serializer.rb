@@ -5,6 +5,8 @@ module Spree
     class PaymentSerializer < ActiveModel::Serializer
       attributes :number, :status, :amount, :payment_method
 
+      has_one :source, serializer: Spree::Wombat::SourceSerializer
+
       def number
         object.identifier
       end
