@@ -5,7 +5,7 @@ module Spree
     describe ProductSerializer do
 
       let(:product) { create(:product) }
-        let(:serialized_product) { JSON.parse( ProductSerializer.new(product, root: false).to_json) }
+      let(:serialized_product) { JSON.parse( ProductSerializer.new(product, root: false).to_json) }
 
       context "format" do
 
@@ -27,6 +27,20 @@ module Spree
 
         it "serializes the shipping category name as shipping_category" do
           expect(serialized_product["shipping_category"]).to eql product.shipping_category.name
+        end
+
+        context 'with sku' do
+          it "should assign sku as id" do
+            expect(serialized_product["id"]).to eql product.sku
+          end
+        end
+
+        context 'without sku' do
+          let(:product) { create(:product, sku: '') }
+
+          it "should assign sku as id" do
+            expect(serialized_product["id"]).to eql product.id
+          end
         end
 
         context "without taxons" do
