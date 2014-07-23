@@ -3,12 +3,8 @@ require 'active_model/serializer'
 module Spree
   module Wombat
     class SourceSerializer < ActiveModel::Serializer
-      attributes :name, :cc_type, :last_digits
-
-      def name
-        object.name
-      end
-
+      attributes :cc_type, :last_digits
+      
       def cc_type
         object.cc_type
       end

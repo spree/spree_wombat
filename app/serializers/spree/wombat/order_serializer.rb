@@ -5,7 +5,7 @@ module Spree
     class OrderSerializer < ActiveModel::Serializer
 
       attributes :id, :status, :channel, :email, :currency, :placed_on, :updated_at, :totals,
-        :adjustments, :guest_token, :channel
+        :adjustments, :channel
 
       has_many :line_items,  serializer: Spree::Wombat::LineItemSerializer
       has_many :payments, serializer: Spree::Wombat::PaymentSerializer
@@ -58,11 +58,11 @@ module Spree
 
       private
         def shipping_total
-          object.shipment_total.to_f
+          object.ship_total.to_f
         end
 
         def tax_total
-          (object.included_tax_total + object.additional_tax_total).to_f
+          object.tax_total.to_f
         end
     end
   end

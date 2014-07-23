@@ -28,7 +28,7 @@ module Spree
       end
 
       def permalink
-        object.slug
+        object.permalink
       end
 
       def shipping_category

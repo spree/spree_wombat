@@ -10,9 +10,6 @@ module Spree
           product = Spree::Variant.where(is_master: true, sku: params[:sku]).first.product
           return response("Cannot find product with SKU #{params[:sku]}!", 500) unless product
 
-          # Disable the after_touch callback on taxons
-          Spree::Product.skip_callback(:touch, :after, :touch_taxons)
-
           Spree::Product.transaction do
             @product = process_root_product(product, root_product_attrs)
             process_images(@product.master, @master_images)
@@ -20,8 +17,6 @@ module Spree
           end
 
           if @product.valid?
-            # set it again, and touch the product
-            Spree::Product.set_callback(:touch, :after, :touch_taxons)
             @product.touch
 
             if @product.variants.count > 0
@@ -44,7 +39,7 @@ module Spree
 
           product
         end
-        
+
       end
     end
   end

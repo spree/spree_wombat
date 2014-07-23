@@ -13,7 +13,7 @@ module Spree
           variant = Spree::Variant.find_by_sku(sku)
           return response("Product with SKU #{sku} was not found", 500) unless variant
 
-          stock_item = stock_location.stock_items.where(variant: variant).first
+          stock_item = stock_location.stock_items.where(variant_id: variant.id).first
 
           return response("Stock location '#{stock_location_name}' does not has any stock_items for #{sku}", 500) unless stock_item
 

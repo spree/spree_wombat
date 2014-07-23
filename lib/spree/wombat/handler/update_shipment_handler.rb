@@ -95,7 +95,7 @@ module Spree
           end
 
           #update attributes
-          shipment.update(shipment_attributes)
+          shipment.send(:update, shipment_attributes)
 
           #fire state transition
           if transition

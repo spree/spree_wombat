@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = '2.2.0'
 
-  gem.add_dependency 'spree_core', '~> 2.3.0'
+  gem.add_dependency 'spree_core', '~> 2.0.0'
   gem.add_dependency 'active_model_serializers', '0.9.0.alpha1'
   gem.add_dependency 'httparty'
 
@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'database_cleaner'
   gem.add_development_dependency 'factory_girl', '~> 4.4'
   gem.add_development_dependency 'ffaker'
-  gem.add_development_dependency 'rspec-rails',  '~> 2.13'
+  gem.add_development_dependency 'rspec-rails',  '~> 2.14.2'
   gem.add_development_dependency 'sass-rails'
   gem.add_development_dependency 'selenium-webdriver'
   gem.add_development_dependency 'simplecov'

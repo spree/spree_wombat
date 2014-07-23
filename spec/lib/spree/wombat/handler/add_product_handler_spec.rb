@@ -293,7 +293,7 @@ module Spree
             let(:product) { Spree::Variant.find_by_sku(message["product"]["sku"]).product}
 
             it "will set the correct permalink" do
-              expect(product.slug).to eql message["product"]["permalink"]
+              expect(product.permalink).to eql message["product"]["permalink"]
             end
 
             it "will assign the taxons" do

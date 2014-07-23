@@ -22,7 +22,7 @@ module Spree
         end
 
         it "serializes the slug as permalink" do
-          expect(serialized_product["permalink"]).to eql product.slug
+          expect(serialized_product["permalink"]).to eql product.permalink
         end
 
         it "serializes the shipping category name as shipping_category" do

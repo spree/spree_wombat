@@ -25,7 +25,7 @@ module Spree
           @root_options = @params.delete(:options)
           @properties = @params.delete(:properties)
 
-          @params[:slug] = permalink if permalink.present?
+          @params[:permalink] = permalink if permalink.present?
           @params[:shipping_category_id] = process_shipping_category(shipping_category_name)
 
           # get the price, since this is a virtual attribute and not in the attribute_names
@@ -60,7 +60,7 @@ module Spree
               property.presentation = property_name
               property.save!
             end
-            Spree::ProductProperty.where(product: product, property: property).first_or_initialize do |pp|
+            Spree::ProductProperty.where(product_id: product.id, property_id: property.id).first_or_initialize do |pp|
               pp.value = properties[property_name]
               pp.save!
             end
@@ -125,7 +125,7 @@ module Spree
             if variant
               variant.update_attributes(child_product)
             else
-              variant = product.variants.create({ product: product }.merge(child_product))
+              variant = product.variants.create({ product_id: product.id }.merge(child_product))
             end
             process_images(variant, images)
           end
