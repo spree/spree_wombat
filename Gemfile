@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'spree', github: 'spree/spree', branch: "2-0-stable"
+gem 'spree', github: 'spree/spree', branch: "2-1-stable"
 
 group :test do
   #gem 'test_after_commit'
