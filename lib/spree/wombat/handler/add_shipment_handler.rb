@@ -28,7 +28,7 @@ module Spree
           @shipment_payload[:inventory_units_attributes] = inventory_units_attributes
 
           @shipment_payload[:state] = @shipment_payload.delete(:status)
-
+          @shipment_payload[:number] = external_id
           shipment = order.shipments.new(@shipment_payload)
           shipment.shipping_method = shipping_method
           shipment.save!
