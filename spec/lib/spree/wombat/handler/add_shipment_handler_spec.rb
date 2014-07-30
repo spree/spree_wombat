@@ -26,8 +26,15 @@ module Spree
 
           it "will return a proper message" do
             responder = handler.process
-            expect(responder.summary).to match /Added shipment H.{11} for order R154085346/
+            external_id = message["shipment"]["id"]
+            expect(responder.summary).to match /Added shipment #{external_id} for order R154085346/
             expect(responder.code).to eql 200
+          end
+
+          it "will set the shipment id as the shipment number" do
+            responder = handler.process
+            external_id = message["shipment"]["id"]
+            expect(Spree::Shipment.find_by_number(external_id)).to_not be_nil
           end
 
           context "attribute filtering" do
