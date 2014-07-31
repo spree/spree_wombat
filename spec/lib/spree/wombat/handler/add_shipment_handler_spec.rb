@@ -48,7 +48,7 @@ module Spree
 
               it "will not blow up" do
                 responder = handler.process
-                expect(responder.summary).to match /Added shipment H.{11} for order R154085346/
+                expect(responder.summary).to match "Added shipment #{message["shipment"]["id"]} for order R154085346"
                 expect(responder.code).to eql 200
               end
             end
