@@ -27,3 +27,5 @@ require 'spree/wombat/handler/update_shipment_handler'
 require 'spree/wombat/handler/customer_handler_base'
 require 'spree/wombat/handler/add_customer_handler'
 require 'spree/wombat/handler/update_customer_handler'
+
+require 'spree/wombat/handler/add_customer_return_handler'

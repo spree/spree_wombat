@@ -12,6 +12,7 @@ group :test do
   gem 'hub_samples', github: "spree/hub_samples", branch: "master"
   gem "pry"
   gem "pry-byebug"
+  gem "timecop"
 end
 
 gemspec
