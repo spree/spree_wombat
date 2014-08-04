@@ -68,7 +68,7 @@ module Spree
         end
 
         def tax_total
-          object.tax_total.to_f
+          (object.included_tax_total + object.additional_tax_total).to_f
         end
 
     end
