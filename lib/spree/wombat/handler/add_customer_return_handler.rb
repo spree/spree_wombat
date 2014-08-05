@@ -13,7 +13,6 @@ module Spree
           end
 
           if customer_return.save
-            attempt_to_accept_return_items(customer_return)
             reimburse_customer_return!(customer_return)
             response "Customer return #{customer_return.id} was added", 200
           else
@@ -56,10 +55,6 @@ module Spree
           return_items = return_items.sort { |ri| -(ri.created_at || DateTime.now).to_i }
           return_items = return_items.sort { |ri| ri.return_authorization.try(:number) == customer_return_params[:rma] ? 0 : 1 }
           return_items.sort { |ri| ri.persisted? ? 0 : 1 }
-        end
-
-        def attempt_to_accept_return_items(customer_return)
-          customer_return.return_items.each(&:attempt_accept)
         end
 
         def reimburse_customer_return!(customer_return)
