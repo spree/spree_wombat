@@ -40,8 +40,7 @@ module Spree
       def totals
         {
           item: object.item_total.to_f,
-          adjustment: (tax_total + shipping_total).to_f,
-          discount: promo_total,
+          adjustment: adjustment_total,
           tax: tax_total,
           shipping: shipping_total,
           payment: object.payments.completed.sum(:amount).to_f,
@@ -51,7 +50,7 @@ module Spree
 
       def adjustments
         [
-          { name: 'discount', value: promo_total },
+          { name: 'discount', value: adjustment_total },
           { name: 'tax', value: tax_total },
           { name: 'shipping', value: shipping_total }
         ]
@@ -59,8 +58,8 @@ module Spree
 
       private
 
-        def promo_total
-          object.promo_total.to_f
+        def adjustment_total
+          object.adjustment_total.to_f
         end
 
         def shipping_total

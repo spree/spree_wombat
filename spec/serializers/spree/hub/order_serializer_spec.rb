@@ -33,8 +33,7 @@ module Spree
           let(:totals) do
             {
               "item"=> 50.0,
-              "adjustment"=> 100.0,
-              "discount" => 0.0,
+              "adjustment"=> 0.0,
               "tax"=> 0.0,
               "shipping"=> 100.0,
               "payment"=> 150.0,
@@ -51,18 +50,6 @@ module Spree
           it "shipment matches order shipping total value" do
             shipping_hash = serialized_order["adjustments"].select { |a| a["name"] == "shipping" }.first
             expect(shipping_hash["value"]).to eq order.shipment_total.to_f
-          end
-
-          context 'discount' do
-            before do
-              create(:adjustment, adjustable: order, source_type: 'Spree::PromotionAction', amount: -50)
-              order.update_totals
-            end
-
-            it "discount matches order promo total value" do
-              discount_hash = serialized_order["adjustments"].select { |a| a["name"] == "discount" }.first
-              expect(discount_hash["value"]).to eq order.promo_total.to_f
-            end
           end
         end
       end
