@@ -143,7 +143,7 @@ module Spree
 
           context "there are return items that are not preauthorized" do
             it_behaves_like "receives the return items"
-            it_behaves_like "attempts to refund the customer"
+            it_behaves_like "does not attempt to refund the customer"
           end
 
           context "there are return items that are preauthorized by another rma" do
@@ -152,13 +152,13 @@ module Spree
             end
 
             it_behaves_like "receives the return items"
-            it_behaves_like "attempts to refund the customer"
+            it_behaves_like "does not attempt to refund the customer"
           end
 
           context "the rma does not exist" do
             before { rma.destroy! }
             it_behaves_like "receives the return items"
-            it_behaves_like "attempts to refund the customer"
+            it_behaves_like "does not attempt to refund the customer"
           end
 
           context "the order does not exist" do

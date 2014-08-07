@@ -59,10 +59,8 @@ module Spree
 
         def reimburse_customer_return!(customer_return)
           if customer_return.completely_decided? && !customer_return.fully_reimbursed?
-            reimbursement = customer_return.reimbursements.create!(
-              return_items: customer_return.return_items,
-              order: customer_return.order
-            )
+            reimbursement = Reimbursement.build_from_customer_return(customer_return)
+            reimbursement.save!
             reimbursement.perform!
           end
         end
