@@ -7,7 +7,7 @@ module Spree
 
         def process
           id = params.delete(:id)
-          product = Spree::Variant.where(is_master: true, sku: params[:sku]).first.product
+          product = Spree::Variant.where(is_master: true, sku: params[:sku]).first.try(:product)
           return response("Cannot find product with SKU #{params[:sku]}!", 500) unless product
 
           # Disable the after_touch callback on taxons
