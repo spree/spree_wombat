@@ -139,6 +139,14 @@ module Spree
             end
             it_behaves_like "receives the return items"
             it_behaves_like "attempts to refund the customer"
+
+            context "there are non-inventory refunds on the order" do
+              before do
+                order.payments.first.refunds.create!(reimbursement_id: nil, amount: 10.0, reason: build(:refund_reason))
+              end
+              it_behaves_like "receives the return items"
+              it_behaves_like "does not attempt to refund the customer"
+            end
           end
 
           context "there are return items that are not preauthorized" do
