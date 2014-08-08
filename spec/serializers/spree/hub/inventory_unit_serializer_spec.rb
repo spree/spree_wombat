@@ -26,8 +26,8 @@ module Spree
         end
       end
 
-      it "serializes the pre_tax_amount as the price" do
-        expect(serialized_inventory_unit["price"]).to eql inventory_unit.pre_tax_amount.to_f
+      it "serializes the line item price as the price" do
+        expect(serialized_inventory_unit["price"]).to eql inventory_unit.line_item.price.round(2).to_f
       end
 
       it "serializes the variant's sku as the product_id" do

@@ -10,7 +10,7 @@ module Spree
       end
 
       def price
-        object.pre_tax_amount.to_f
+        object.line_item.price.round(2).to_f
       end
 
       def product_id
