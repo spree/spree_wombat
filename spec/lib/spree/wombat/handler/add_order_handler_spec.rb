@@ -45,6 +45,23 @@ module Spree
             expect(responder.summary).to match /Order number R.{9} was added/
           end
         end
+
+        context "with abbreviated state name" do
+          let!(:message) { ::Hub::Samples::Order.request }
+          let(:handler) {
+            message['order']['billing_address']['state'] = 'CA'
+            message['order']['shipping_address']['state'] = 'CA'
+            Handler::AddOrderHandler.new(message.to_json)
+          }
+
+          let(:line_item) { message['order']['line_items'].first }
+
+          before { create(:variant, sku: line_item['product_id']) }
+
+          it "imports a new order in the storefront" do
+            expect{handler.process}.to change{Spree::Order.count}.by(1)
+          end
+        end
       end
     end
   end
