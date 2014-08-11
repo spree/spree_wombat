@@ -32,12 +32,18 @@ module Spree
         end
 
         private
+
         def self.prepare_address(address_hash, target_key)
           address_hash['country'] = {
             'iso' => address_hash['country'].upcase }
 
-          address_hash['state'] = {
-            'name' => address_hash['state'].capitalize }
+          if address_hash['state'].length == 2
+            address_hash['state'] = {
+              'abbr' => address_hash['state'].upcase }
+          else
+            address_hash['state'] = {
+              'name' => address_hash['state'].capitalize }
+          end
         end
 
         def self.rehash_line_items(line_items)
