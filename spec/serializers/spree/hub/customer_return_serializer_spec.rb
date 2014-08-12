@@ -53,6 +53,10 @@ module Spree
         it "includes return items" do
           expect(serialized_return[:return_items].count).to eq customer_return.return_items.count
         end
+
+        it "sets the resolution path" do # for linking customer service agents for manual intervention
+          expect(serialized_return[:resolution_path]).to eq "/admin/orders/#{customer_return.order.number}/customer_returns/#{customer_return.id}/edit"
+        end
       end
     end
   end
