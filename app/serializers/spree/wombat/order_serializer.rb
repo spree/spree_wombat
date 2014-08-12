@@ -17,6 +17,10 @@ module Spree
         object.number
       end
 
+      def shipping_instructions
+        object.special_instructions
+      end
+
       def status
         object.state
       end
