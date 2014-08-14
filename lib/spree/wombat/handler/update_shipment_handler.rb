@@ -39,12 +39,12 @@ module Spree
           email = shipment_hsh.delete(:email)
 
           stock_location_name = shipment_hsh.delete(:stock_location)
-          stock_location = Spree::StockLocation.find_by_name(stock_location_name)
+          stock_location = Spree::StockLocation.find_by_name(stock_location_name) || Spree::StockLocation.find_by_admin_name(stock_location_name)
           return response("Can't find a StockLocation with name #{stock_location_name}!", 500) unless stock_location
           shipment_hsh[:stock_location_id] = stock_location.id
 
           shipping_method_name = shipment_hsh.delete(:shipping_method)
-          shipping_method = Spree::ShippingMethod.find_by_name(shipping_method_name)
+          shipping_method = Spree::ShippingMethod.find_by_name(shipping_method_name) || Spree::ShippingMethod.find_by_admin_name(shipping_method_name)
           return response("Can't find a ShippingMethod with name #{shipping_method_name}!", 500) unless shipping_method
 
           shipment_attributes = shipment_hsh.slice *Spree::Shipment.attribute_names
