@@ -30,13 +30,17 @@ module Spree
 
         def return_items
           customer_return_params[:items].flat_map do |item|
-            order = Order.includes(inventory_units: [{ return_items: :return_authorization }, :variant]).find_by(number: item[:order_number])
-            inventory_units = order.inventory_units.select { |iu| iu.variant.sku == item[:sku] }
+            inventory_units = item_inventory_units(item)
             return_items = inventory_units.map(&:current_or_new_return_item)
             return_items = prune_received_return_items(return_items)
             return_items = sort_return_items(return_items)
             return_items.take(item[:quantity].presence || 1)
           end.compact
+        end
+
+        def item_inventory_units(item)
+          order = Order.includes(inventory_units: [{ return_items: :return_authorization }, :variant]).find_by(number: item[:order_number])
+          order.inventory_units.select { |iu| iu.variant.sku == item[:sku] }
         end
 
         def customer_return_params
