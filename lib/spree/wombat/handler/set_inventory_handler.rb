@@ -6,7 +6,7 @@ module Spree
         def process
           stock_location_name = @payload[:inventory][:location]
 
-          stock_location = Spree::StockLocation.find_by_name(stock_location_name)
+          stock_location = Spree::StockLocation.find_by_name(stock_location_name) || Spree::StockLocation.find_by_admin_name(stock_location_name)
           return response("Stock location with name #{stock_location_name} was not found", 500) unless stock_location
 
           sku = @payload[:inventory][:product_id]
