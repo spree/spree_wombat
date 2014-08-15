@@ -11,6 +11,17 @@ module Spree
         keys
       end
 
+      def attributes
+        hash = super
+
+        if objects = hash.delete(:objects)
+          objects.each do |key, array_of_objects|
+            hash[key] = array_of_objects
+          end
+        end
+
+        hash
+      end
     end
   end
 end
