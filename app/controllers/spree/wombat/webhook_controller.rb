@@ -7,7 +7,7 @@ module Spree
       def consume
         handler = Handler::Base.build_handler(@called_hook, @webhook_body)
         responder = handler.process
-        render json: responder, root: false, status: responder.code
+        render json: ResponderSerializer.new(responder, root: false), status: responder.code
       end
 
       protected
