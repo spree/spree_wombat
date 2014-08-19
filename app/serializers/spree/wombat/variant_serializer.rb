@@ -4,7 +4,7 @@ module Spree
   module Wombat
     class VariantSerializer < ActiveModel::Serializer
 
-      attributes :sku, :price, :cost_price, :options
+      attributes :sku, :price, :cost_price, :options, :weight, :height, :width, :depth
       has_many :images, serializer: Spree::Wombat::ImageSerializer
 
       def price

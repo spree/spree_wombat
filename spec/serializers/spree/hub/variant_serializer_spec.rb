@@ -17,6 +17,13 @@ module Spree
           expect(serialized_variant["cost_price"].class).to eql Float
         end
 
+        it "serializes weight & dimensions" do
+          expect(serialized_variant['weight']).to  be_present
+          expect(serialized_variant['height']).to  be_present
+          expect(serialized_variant['width']).to  be_present
+          expect(serialized_variant['depth']).to  be_present
+        end
+
         context "without options" do
 
           let(:variant) { create(:product).master }

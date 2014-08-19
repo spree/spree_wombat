@@ -6,7 +6,7 @@ module Spree
 
       attributes :id, :name, :sku, :description, :price, :cost_price,
                  :available_on, :permalink, :meta_description, :meta_keywords,
-                 :shipping_category, :taxons, :options
+                 :shipping_category, :taxons, :options, :weight, :height, :width, :depth
 
       has_many :images, serializer: Spree::Wombat::ImageSerializer
       has_many :variants, serializer: Spree::Wombat::VariantSerializer

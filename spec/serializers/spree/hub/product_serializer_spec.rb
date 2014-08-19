@@ -4,7 +4,7 @@ module Spree
   module Wombat
     describe ProductSerializer do
 
-      let(:product) { create(:product) }
+      let(:product) { create(:product, height: 1, width: 1, depth: 1) }
         let(:serialized_product) { JSON.parse( ProductSerializer.new(product, root: false).to_json) }
 
       context "format" do
@@ -27,6 +27,13 @@ module Spree
 
         it "serializes the shipping category name as shipping_category" do
           expect(serialized_product["shipping_category"]).to eql product.shipping_category.name
+        end
+
+        it "serializes weight & dimensions" do
+          expect(serialized_product['weight']).to  be_present
+          expect(serialized_product['height']).to  be_present
+          expect(serialized_product['width']).to  be_present
+          expect(serialized_product['depth']).to  be_present
         end
 
         context "without taxons" do
