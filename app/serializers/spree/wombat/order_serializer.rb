@@ -51,6 +51,7 @@ module Spree
 
       def adjustments
         [
+          { name: 'discount', value: object.promo_total.to_f },
           { name: "tax", value: tax_total },
           { name: "shipping", value: shipping_total }
         ]
