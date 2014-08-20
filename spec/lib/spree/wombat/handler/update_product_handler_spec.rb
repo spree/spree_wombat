@@ -6,7 +6,7 @@ module Spree
 
       before do
         img_fixture = File.open(File.expand_path('../../../../../fixtures/thinking-cat.jpg', __FILE__))
-        Handler::UpdateProductHandler.any_instance.stub(:open).and_return img_fixture
+        URI.stub(:parse).and_return img_fixture
       end
 
       context "#process" do

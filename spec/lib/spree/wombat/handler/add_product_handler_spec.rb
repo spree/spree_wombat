@@ -170,7 +170,7 @@ module Spree
         context "with images with valid url" do
           before do
             img_fixture = File.open(File.expand_path('../../../../../fixtures/thinking-cat.jpg', __FILE__))
-            Handler::AddProductHandler.any_instance.stub(:open).and_return img_fixture
+            URI.stub(:parse).and_return img_fixture
           end
 
           it "will download the image and assign it" do
@@ -260,7 +260,7 @@ module Spree
       describe "#process" do
         before do
           img_fixture = File.open(File.expand_path('../../../../../fixtures/thinking-cat.jpg', __FILE__))
-          Handler::AddProductHandler.any_instance.stub(:open).and_return img_fixture
+          URI.stub(:parse).and_return img_fixture
         end
 
         context "product without children" do
