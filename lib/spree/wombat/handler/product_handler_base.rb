@@ -102,7 +102,7 @@ module Spree
           return unless images.present?
 
           images.each do |image_hsh|
-            image = variant.images.create
+            image = variant.images.build
             image.attachment = open(URI.parse(URI.encode(image_hsh["url"].strip)))
             image.position = image_hsh["position"]
             image.alt = image_hsh["title"]
