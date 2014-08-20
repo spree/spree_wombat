@@ -112,13 +112,13 @@ module Spree
                 items: [
                   {
                     sku: variant_1.sku,
-                    quantity: 1,
+                    quantity: "1",
                     product_status: "GOOD",
                     order_number: order.number,
                   },
                   {
                     sku: variant_2.sku,
-                    quantity: 2,
+                    quantity: "2",
                     product_status: "DAMAGED",
                     order_number: order.number,
                   }
