@@ -41,7 +41,11 @@ module Spree
             return_items = inventory_units.map(&:current_or_new_return_item)
             return_items = prune_received_return_items(return_items) unless include_received
             return_items = sort_return_items(return_items)
-            return_items.take(item[:quantity].presence || 1)
+
+            quantity = item[:quantity].to_i
+            quantity = 1 if quantity == 0
+            return_items.take(quantity)
+
           end.compact
         end
 
@@ -55,7 +59,7 @@ module Spree
         end
 
         def intended_quantity
-          customer_return_params[:items].map { |i| i[:quantity] }.sum
+          customer_return_params[:items].map { |i| i[:quantity].to_i }.sum
         end
 
         def prune_received_return_items(return_items)
