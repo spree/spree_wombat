@@ -4,10 +4,10 @@ module Spree
   module Wombat
     class ShipmentSerializer < ActiveModel::Serializer
       attributes :id, :order_id, :email, :cost, :status, :stock_location,
-                :shipping_method, :tracking, :updated_at, :shipped_at, :channel
+                :shipping_method, :tracking, :updated_at, :shipped_at, :channel, :items
 
       has_one :ship_to, serializer: AddressSerializer, root: "shipping_address"
-      has_many :inventory_units, serializer: InventoryUnitSerializer, root: "items"
+      #has_many :inventory_units, serializer: InventoryUnitSerializer, root: "items"
 
       def id
         object.number
@@ -47,6 +47,14 @@ module Spree
 
       def shipped_at
         object.shipped_at.try(:iso8601)
+      end
+
+      def items
+        i = []
+        object.inventory_units.each do |inventory_unit|
+          i << InventoryUnitSerializer.new(inventory_unit, root: false)
+        end
+        i
       end
     end
   end
