@@ -6,7 +6,7 @@ module Spree
       attributes :name, :cc_type, :last_digits, :source_type
 
       def name
-        object.name
+        object.try(:name) || "N/A"
       end
 
       def cc_type
