@@ -35,8 +35,10 @@ module Spree
           context "with mismatching items in shipment" do
 
             before do
-              line_item.quantity = 2
-              line_item.save
+              line_item.update_attributes(quantity: 2)
+              new_inventory_unit = shipment.inventory_units.last.dup
+              new_inventory_unit.save!
+              shipment.inventory_units << new_inventory_unit
             end
 
             it "will return an error message with the mismatch diff" do
