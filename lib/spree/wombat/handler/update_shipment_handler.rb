@@ -51,7 +51,7 @@ module Spree
           shipment_attributes["address_attributes"] = address_attributes if address_attributes
 
           missing_variants = []
-          missing_line_items = []
+          missing_inventory_units = []
 
           shipping_items = shipment_hsh.delete(:items)
           if shipping_items
@@ -65,24 +65,31 @@ module Spree
                 next
               end
 
-              line_item_id = shipment.order.line_items.where(variant_id: variant.id).pluck(:id).first
-              unless line_item_id
-                missing_line_items << sku
+              inventory_unit_id = shipment.inventory_units.where(variant_id: variant.id).pluck(:id).first
+              unless inventory_unit_id
+                missing_inventory_units << sku
                 next
               end
             end
 
             # check on items sku and quantity
-            shipment_lines = shipment.line_items.map { |li| {sku: li.variant.sku, quantity: li.quantity} }
-            received_shipping_items = shipping_items.map { |item| {sku: item[:product_id], quantity: item[:quantity]} }
+            shipment_lines = shipment.inventory_units.map do |inventory_unit|
+              quantity = inventory_unit.respond_to?(:quantity) ? inventory_unit.quantity : 1
+              { sku: inventory_unit.variant.sku, quantity: quantity }
+            end
 
-            shipping_items_diff = received_shipping_items - shipment_lines
+            received_shipping_items = shipping_items.map { |item| {sku: item[:product_id], quantity: item[:quantity].to_i} }
+
+            shipping_items_diff = received_shipping_items.reject do |item|
+              # using Array#delete deletes all of the instances of the item, we just want to delete the first
+              index_of_item = shipment_lines.index(item)
+              index_of_item && shipment_lines.delete_at(index_of_item)
+            end
 
             return response("The received shipment items do not match with the shipment, diff: #{shipping_items_diff}", 500) unless shipping_items_diff.empty?
 
             return response("Can't find variants with the following skus: #{missing_variants.join(', ')}", 500) unless missing_variants.empty?
-            return response("Can't find line_items with the following skus: #{missing_line_items.join(', ')} in the order.", 500) unless missing_line_items.empty?
-
+            return response("Can't find inventory_units with the following skus: #{missing_inventory_units.join(', ')} in the order.", 500) unless missing_inventory_units.empty?
           end
 
           # check if a state transition is required, and search for correct event to fire
