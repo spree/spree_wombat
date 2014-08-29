@@ -36,8 +36,8 @@ module Spree
           context "with mismatching items in shipment" do
 
             before do
-              line_item.quantity = 2
-              line_item.save
+              original_item = message['shipment']['items'].first
+              message['shipment']['items'] << original_item
             end
 
             it "will return an error message with the mismatch diff" do
@@ -45,6 +45,22 @@ module Spree
               expect(responder.summary).to match /The received shipment items do not match with the shipment, diff:/
               expect(responder.code).to eql 500
             end
+          end
+
+          context "with multiple of the same items in a shipment" do
+            before do
+              new_inventory_unit = shipment.inventory_units.last.dup
+              new_inventory_unit.save!
+              original_item = message['shipment']['items'].first
+              message['shipment']['items'] << original_item
+            end
+
+            it "will return a proper message" do
+              responder = handler.process
+              expect(responder.summary).to eql "Updated shipment #{shipment.number}"
+              expect(responder.code).to eql 200
+            end
+
           end
 
           context "including a valid state transition" do
