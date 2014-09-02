@@ -103,7 +103,7 @@ module Spree
           let(:message) do
             {
               customer_return: {
-                rma: rma.number,
+                rma_number: rma.number,
                 receipt_date: 5.minutes.ago,
                 stock_location: stock_location.name,
                 items: [
@@ -205,7 +205,7 @@ module Spree
             let(:message) do
               {
                 customer_return: {
-                  rma: rma.number,
+                  rma_number: rma.number,
                   receipt_date: 5.minutes.ago,
                   stock_location: stock_location.name,
                   items: [
@@ -271,7 +271,7 @@ module Spree
           let(:message) do
             {
               customer_return: {
-                rma: rma.number,
+                rma_number: rma.number,
                 receipt_date: 5.minutes.ago,
                 stock_location: stock_location.name,
                 items: []
