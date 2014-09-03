@@ -73,14 +73,14 @@ module Spree
             end
 
             # check on items sku and quantity
-            shipment_lines = shipment.inventory_units.group_by(&:variant).map do |variant, inventory_units|
-              quantity = inventory_units.first.respond_to?(:quantity) ? inventory_units.sum(:quantity) : inventory_units.count
-              { sku: variant.sku, quantity: quantity }
+            shipment_lines = shipment.inventory_units.map do |inventory_unit|
+              quantity = inventory_unit.respond_to?(:quantity) ? inventory_unit.quantity : 1
+              { sku: inventory_unit.variant.sku, quantity: quantity }
             end
 
             received_shipping_items = shipping_items.map { |item| {sku: item[:product_id], quantity: item[:quantity]} }
 
-            shipping_items_diff = received_shipping_items - shipment_lines
+            shipping_items_diff = received_shipping_items.reject { |item| shipment_lines.delete(item) }
 
             return response("The received shipment items do not match with the shipment, diff: #{shipping_items_diff}", 500) unless shipping_items_diff.empty?
 
