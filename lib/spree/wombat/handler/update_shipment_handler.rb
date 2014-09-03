@@ -80,7 +80,11 @@ module Spree
 
             received_shipping_items = shipping_items.map { |item| {sku: item[:product_id], quantity: item[:quantity].to_i} }
 
-            shipping_items_diff = received_shipping_items.reject { |item| shipment_lines.delete(item) }
+            shipping_items_diff = received_shipping_items.reject do |item|
+              # using Array#delete deletes all of the instances of the item, we just want to delete the first
+              index_of_item = shipment_lines.index(item)
+              index_of_item && shipment_lines.delete_at(index_of_item)
+            end
 
             return response("The received shipment items do not match with the shipment, diff: #{shipping_items_diff}", 500) unless shipping_items_diff.empty?
 
