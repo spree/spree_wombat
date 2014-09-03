@@ -78,7 +78,7 @@ module Spree
               { sku: inventory_unit.variant.sku, quantity: quantity }
             end
 
-            received_shipping_items = shipping_items.map { |item| {sku: item[:product_id], quantity: item[:quantity]} }
+            received_shipping_items = shipping_items.map { |item| {sku: item[:product_id], quantity: item[:quantity].to_i} }
 
             shipping_items_diff = received_shipping_items.reject { |item| shipment_lines.delete(item) }
 
