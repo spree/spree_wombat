@@ -41,13 +41,25 @@ module Spree
         expect(serialized_shipment["shipping_method"]).to eql shipment.shipping_method.name
       end
 
-      it "serializes the updated_at in ISO format" do
-        expect(serialized_shipment["updated_at"]).to match /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/
+      it "serializes the placed_on in ISO format" do
+        shipment.order.stub(:completed_at?).and_return true
+        shipment.order.stub(:completed_at).and_return Time.now.utc
+        expect(serialized_shipment["placed_on"]).to match /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/
       end
 
       it "serializes the shipped_at in ISO format" do
         shipment.stub(:shipped_at).and_return Time.now.utc
         expect(serialized_shipment["shipped_at"]).to match /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/
+      end
+
+      it "serializes the updated_at in ISO format" do
+        expect(serialized_shipment["updated_at"]).to match /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/
+      end
+
+      it "serializes the address as billing_address" do
+        expect(serialized_shipment["billing_address"]).to_not be_nil
+        address = JSON.parse(AddressSerializer.new(shipment.order.bill_address, root: false).to_json)
+        expect(serialized_shipment["billing_address"]).to eql address
       end
 
       it "serializes the address as shipping_address" do
@@ -70,6 +82,25 @@ module Spree
         )
         expect(serialized_shipment["items"]).to eql line_items
       end
+
+      context "totals" do
+
+        let(:totals) do
+          {
+            "item"=> 10.0,
+            "adjustment"=> 0.0,
+            "tax"=> 0.0,
+            "shipping"=> 100.0,
+            "payment"=> 0.0,
+            "order"=> 110.0
+          }
+        end
+
+        it "has all the amounts for the order" do
+          expect(serialized_shipment["totals"]).to eql totals
+        end
+      end
+
     end
   end
 end

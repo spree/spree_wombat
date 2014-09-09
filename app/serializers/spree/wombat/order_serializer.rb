@@ -37,7 +37,7 @@ module Spree
         if object.completed_at?
           object.completed_at.getutc.try(:iso8601)
         else
-          object.created_at.getutc.try(:iso8601)
+          ''
         end
       end
 
