@@ -75,8 +75,8 @@ module Spree
         expect(serialized_shipment["items"]).to_not be_empty
         line_items = JSON.parse(
           ActiveModel::ArraySerializer.new(
-            shipment.line_items,
-            each_serializer: Spree::Wombat::LineItemSerializer,
+            shipment.inventory_units,
+            each_serializer: Spree::Wombat::InventoryUnitSerializer,
             root: false
           ).to_json
         )
@@ -87,12 +87,12 @@ module Spree
 
         let(:totals) do
           {
-            "item"=> 10.0,
+            "item"=> 50.0,
             "adjustment"=> 0.0,
             "tax"=> 0.0,
             "shipping"=> 100.0,
             "payment"=> 0.0,
-            "order"=> 110.0
+            "order"=> 150.0
           }
         end
 

@@ -71,8 +71,8 @@ module Spree
 
       def items
         i = []
-        object.line_items.each do |li|
-          i << LineItemSerializer.new(li, root: false)
+        object.inventory_units.each do |li|
+          i << InventoryUnitSerializer.new(li, root: false)
         end
         i
       end
