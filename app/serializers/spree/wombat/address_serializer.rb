@@ -7,7 +7,7 @@ module Spree
                  :state, :country, :phone
 
       def country
-        object.country.iso
+        object.country.try(:iso)
       end
 
       def state
