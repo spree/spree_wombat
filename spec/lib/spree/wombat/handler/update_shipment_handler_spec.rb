@@ -30,6 +30,7 @@ module Spree
             responder = handler.process
             expect(responder.summary).to eql "Updated shipment #{shipment.number}"
             expect(responder.code).to eql 200
+            expect(order.reload.shipment_state).to eq 'pending'
           end
 
           context "with mismatching items in shipment" do
