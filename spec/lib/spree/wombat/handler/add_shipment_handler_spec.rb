@@ -29,6 +29,7 @@ module Spree
             external_id = message["shipment"]["id"]
             expect(responder.summary).to match /Added shipment #{external_id} for order R154085346/
             expect(responder.code).to eql 200
+            expect(order.reload.shipment_state).to eq  'partial'
           end
 
           it "will set the shipment id as the shipment number" do
