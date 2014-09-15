@@ -24,7 +24,7 @@ module Spree
           scope = scope.send(filter.to_sym)
         end
 
-        scope.constantize.where("updated_at > ?", ts).find_in_batches(batch_size: 10) do |batch|
+        scope.where("updated_at > ?", ts).find_in_batches(batch_size: 10) do |batch|
           object_count += batch.size
           payload = ActiveModel::ArraySerializer.new(
             batch,
