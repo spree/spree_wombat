@@ -80,8 +80,12 @@ module Spree
           shipment.refresh_rates
           shipment.save!
 
-          return response("Added shipment #{shipment.number} for order #{order.number}")
+          # Ensure Order shipment state and totals are updated.
+          # Note: we call update_shipment_state separately from update in case order is not in completed.
+          order.updater.update_shipment_state
+          order.updater.update
 
+          return response("Added shipment #{shipment.number} for order #{order.number}")
         end
 
       end
