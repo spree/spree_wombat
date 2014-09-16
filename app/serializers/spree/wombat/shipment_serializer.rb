@@ -88,7 +88,7 @@ module Spree
         end
 
         def tax_total
-          object.order.tax_total.to_f
+          (object.order.included_tax_total + object.order.additional_tax_total).to_f
         end
 
     end
