@@ -22,6 +22,8 @@ module Spree
 
       def exception_handler(exception)
         base_handler = Handler::Base.new(@webhook_body)
+        logger.error exception
+        logger.error exception.backtrace.join("\n").to_s
         responder = base_handler.response(exception.message, 500)
         responder.backtrace = exception.backtrace.to_s
         render json: responder, root: false, status: responder.code
