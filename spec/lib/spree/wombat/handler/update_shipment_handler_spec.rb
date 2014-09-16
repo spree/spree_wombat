@@ -79,10 +79,28 @@ module Spree
               expect(shipment.reload.state).to eql 'pending'
             end
           end
+
+          context "finds stock location" do
+            context "when a stock location with name equal to stock_location in the message exists" do
+              it "find stock location by name" do
+                responder = handler.process
+                expect(responder.code).to eql 200
+                expect(shipment.reload.stock_location).to eql stock_location
+              end
+            end
+
+            context "when a stock location with admin name equal to stock_location in the message exists" do
+              let!(:stock_location) { create(:stock_location, name: 'a stock location name', admin_name: 'default')}
+
+              it "find stock location by admin name" do
+                responder = handler.process
+                expect(responder.code).to eql 200
+                expect(shipment.reload.stock_location).to eql stock_location
+              end
+            end
+          end
         end
-
       end
-
     end
   end
 end
