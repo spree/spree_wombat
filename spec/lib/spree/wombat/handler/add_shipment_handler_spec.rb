@@ -75,6 +75,26 @@ module Spree
             end
           end
 
+          context "finds shipping method" do
+            context "when a shipping method with name equal to shipping_method in the message exists" do
+              it "find a shipping method by name" do
+                responder = handler.process
+                expect(responder.code).to eql 200
+                expect(order.reload.shipments.last.shipping_method).to eql shipping_method
+              end
+            end
+
+            context "when a shipping method with admin name equal to shipping_method in the message exists" do
+              let!(:shipping_method) { create(:shipping_method, name: 'a shipping method name', admin_name: 'UPS Ground (USD)')}
+
+              it "find a shipping method by admin name" do
+                responder = handler.process
+                expect(responder.code).to eql 200
+                expect(order.reload.shipments.last.shipping_method).to eql shipping_method
+              end
+            end
+          end
+
           context "finds state" do
             context "by abbr" do
 
