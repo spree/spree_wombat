@@ -1,5 +1,6 @@
 module Spree
   class WombatConfiguration < Preferences::Configuration
+    preference :batch_size, :integer, default: 10
     preference :connection_id, :string
     preference :connection_token, :string
     preference :push_url, :string, :default => 'https://push.wombat.co'

@@ -21,7 +21,7 @@ module Spree
           scope = scope.send(filter.to_sym)
         end
 
-        scope.where(updated_at: last_push_time...this_push_time).find_in_batches(batch_size: 10) do |batch|
+        scope.where(updated_at: last_push_time...this_push_time).find_in_batches(batch_size: Spree::Wombat::Config[:batch_size]) do |batch|
           object_count += batch.size
           payload = ActiveModel::ArraySerializer.new(
             batch,
