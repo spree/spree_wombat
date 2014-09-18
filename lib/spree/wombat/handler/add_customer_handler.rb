@@ -12,8 +12,8 @@ module Spree
           user = Spree.user_class.new(email: email)
           user.save(validation: false)
 
-          firstname = payload["customer"]["firstname"]
-          lastname = payload["customer"]["lastname"]
+          firstname = @payload["customer"]["firstname"]
+          lastname = @payload["customer"]["lastname"]
 
           begin
             user.ship_address = Spree::Address.create!(prepare_address(firstname, lastname, @payload["customer"]["shipping_address"]))
