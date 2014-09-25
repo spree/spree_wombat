@@ -84,6 +84,7 @@ module Spree
           shipment_attributes["inventory_units_attributes"] = inventory_units_attributes
           shipment_attributes["address_attributes"] = address_attributes
           shipment_attributes["number"] = external_id
+          shipment_attributes["state"] ||= 'pending'
           shipment = Spree::Shipment.create!(shipment_attributes)
           shipment.shipping_methods << shipping_method
           shipment.refresh_rates
