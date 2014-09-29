@@ -6,7 +6,7 @@ module Spree
       attributes :url, :position, :title, :type, :dimensions
 
       def url
-        add_host_prefix(object.attachment.url(:original))
+        add_host_prefix(object.attachment.url(:original)).gsub(/\?.*/, '')
       end
 
       def title
