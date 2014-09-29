@@ -19,8 +19,15 @@ module Spree
           expect(serialized_order["status"]).to eql order.state
         end
 
-        it "sets the channel to spree" do
-          expect(serialized_order["channel"]).to eql "spree"
+        context '#channel' do
+          it "sets the channel to spree if unset" do
+            expect(serialized_order["channel"]).to eql "spree"
+          end
+
+          it "sets the channel to existing value other than spree" do
+            order.update_column :channel, 'wombat'
+            expect(serialized_order["channel"]).to eql "wombat"
+          end
         end
 
         it "set's the placed_on to completed_at date in ISO format" do
