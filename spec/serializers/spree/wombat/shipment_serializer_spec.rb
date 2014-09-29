@@ -27,8 +27,15 @@ module Spree
         expect(serialized_shipment["status"]).to eql shipment.state
       end
 
-      it "sets the channel to spree" do
-        expect(serialized_shipment["channel"]).to eql "spree"
+      context '#channel' do
+        it "sets the channel to spree if unset" do
+          expect(serialized_shipment["channel"]).to eql "spree"
+        end
+
+        it "sets the channel to existing value other than spree" do
+          shipment.order.update_column :channel, 'wombat'
+          expect(serialized_shipment["channel"]).to eql "wombat"
+        end
       end
 
       it "serializes the stock_location.name as stock_location" do
