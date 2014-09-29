@@ -61,7 +61,7 @@ module Spree
             expect(serialized_variant["images"].count).to be 3
             dimension_hash = {"height" => 490, "width" => 489}
             3.times.each_with_index do |i|
-              expect(serialized_variant["images"][i]["url"]).to match /http:\/\/myapp.dev\/spree\/products\/\d*\/original\/thinking-cat.jpg\?\d*/
+              expect(serialized_variant["images"][i]["url"]).to match /http:\/\/myapp.dev\/spree\/products\/\d*\/original\/thinking-cat.jpg\z/
               expect(serialized_variant["images"][i]["position"]).to eql i
               expect(serialized_variant["images"][i]["title"]).to eql "variant image #{i}"
               expect(serialized_variant["images"][i]["type"]).to eql "original"
