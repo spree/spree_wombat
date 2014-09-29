@@ -26,7 +26,7 @@ module Spree
       end
 
       def channel
-        'spree'
+        object.channel || 'spree'
       end
 
       def updated_at
