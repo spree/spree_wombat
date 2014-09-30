@@ -46,6 +46,25 @@ module Spree
           end
         end
 
+        context "with custom non existing spree attributes on line_items" do
+          let!(:message) { ::Hub::Samples::Order.request }
+          let(:handler) { Handler::AddOrderHandler.new(message.to_json) }
+
+          let(:line_item) do
+            li = message['order']['line_items'].first
+            li[:shopify_id] = 1234
+            li
+          end
+
+          before { create(:variant, sku: line_item['product_id']) }
+
+          it "importing the order will ignore the non existing attributes" do
+            handler.process
+            expect(LineItem.last.variant.sku).to eq line_item['product_id']
+          end
+
+        end
+
         context "with abbreviated state name" do
           let!(:message) { ::Hub::Samples::Order.request }
           let(:handler) {
