@@ -49,9 +49,9 @@ module Spree
         def self.rehash_line_items(line_items)
           hash = {}
           line_items.each_index do |i|
-            hash[i.to_s] = line_items[i]
-            hash[i.to_s]['sku'] = hash[i.to_s].delete 'product_id'
-            hash[i.to_s].delete 'name'
+            sku = line_items[i].delete 'product_id'
+            hash[i.to_s] = line_items[i].slice *Spree::LineItem.attribute_names
+            hash[i.to_s]['sku'] = sku
           end
           hash
         end
