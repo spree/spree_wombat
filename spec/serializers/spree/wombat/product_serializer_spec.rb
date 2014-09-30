@@ -5,7 +5,7 @@ module Spree
     describe ProductSerializer do
 
       let(:product) { create(:product, height: 1, width: 1, depth: 1) }
-        let(:serialized_product) { JSON.parse( ProductSerializer.new(product, root: false).to_json) }
+      let(:serialized_product) { JSON.parse( ProductSerializer.new(product, root: false).to_json) }
 
       context "format" do
 
@@ -111,17 +111,18 @@ module Spree
         end
 
         context "without variants" do
-          it "returns [] for 'variants'" do
-            expect(serialized_product["variants"]).to eql []
+          it "returns master variant in 'variants' key" do
+            master_product = {"sku"=>product.master.sku, "price"=>19.99, "cost_price"=>17.0, "options"=>{}, "weight"=>"0.0", "height"=>"1.0", "width"=>"1.0", "depth"=>"1.0", "images"=>[]}
+            expect(serialized_product["variants"]).to eql [master_product]
           end
         end
 
         context "with variants" do
           let!(:product) {create(:product_with_option_types)}
           let!(:variant) { create(:variant, :product => product) }
-          it "serialized the variant as nested objects" do
+          it "serialized the variant and master as nested objects" do
             product.reload
-            expect(serialized_product["variants"].count).to eql 1
+            expect(serialized_product["variants"].count).to eql 2
           end
         end
       end
