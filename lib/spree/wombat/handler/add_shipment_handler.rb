@@ -15,6 +15,10 @@ module Spree
 
           external_id = shipment.delete(:id)
 
+          existing_shipment = Spree::Shipment.find_by_number(external_id)
+          return response("Already have a shipment for order #{order_number} associated with shipment number #{external_id}", 500) if existing_shipment
+
+
           address_attributes = shipment.delete(:shipping_address)
           country_iso = address_attributes.delete(:country)
           country = Spree::Country.find_by_iso(country_iso)
