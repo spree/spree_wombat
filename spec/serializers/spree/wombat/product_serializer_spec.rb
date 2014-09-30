@@ -4,7 +4,7 @@ module Spree
   module Wombat
     describe ProductSerializer do
 
-      let(:product) { create(:product, height: 1, width: 1, depth: 1) }
+      let(:product) { create(:product) }
       let(:serialized_product) { JSON.parse( ProductSerializer.new(product, root: false).to_json) }
 
       context "format" do
@@ -105,7 +105,7 @@ module Spree
 
         context "without variants" do
           it "returns master variant in 'variants' key" do
-            master_product = {"sku"=>product.master.sku, "price"=>19.99, "cost_price"=>17.0, "options"=>{}, "weight"=>"0.0", "height"=>"1.0", "width"=>"1.0", "depth"=>"1.0", "images"=>[]}
+            master_product = {"sku"=>product.master.sku, "price"=>19.99, "cost_price"=>17.0, "options"=>{}, "images"=>[]}
             expect(serialized_product["variants"]).to eql [master_product]
           end
         end
