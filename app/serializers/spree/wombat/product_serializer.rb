@@ -9,7 +9,7 @@ module Spree
                  :shipping_category, :taxons, :options
 
       has_many :images, serializer: Spree::Wombat::ImageSerializer
-      has_many :variants, serializer: Spree::Wombat::VariantSerializer
+      has_many :variants_including_master, serializer: Spree::Wombat::VariantSerializer, root: "variants"
 
       def id
         object.sku
