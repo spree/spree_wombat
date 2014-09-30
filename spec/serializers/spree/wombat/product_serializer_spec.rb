@@ -4,6 +4,7 @@ module Spree
   module Wombat
     describe ProductSerializer do
 
+
       let(:product) { create(:product) }
       let(:serialized_product) { JSON.parse( ProductSerializer.new(product, root: false).to_json) }
 
