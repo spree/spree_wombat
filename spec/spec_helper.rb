@@ -41,7 +41,7 @@ RSpec.configure do |config|
   config.backtrace_exclusion_patterns = [/gems\/activesupport/, /gems\/actionpack/, /gems\/rspec/]
   config.color = true
   config.infer_spec_type_from_file_location!
-  
+
   config.include FactoryGirl::Syntax::Methods
   config.include Spree::TestingSupport::Preferences, :type => :controller
   config.include Spree::TestingSupport::ControllerRequests, :type => :controller
@@ -57,6 +57,13 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
+    push_objects = Spree::Wombat::Config[:push_objects]
+    push_objects << "Spree::Order"
+    Spree::Wombat::Config[:push_objects] = push_objects.uniq
+
+    payload_builder = Spree::Wombat::Config[:payload_builder]
+    payload_builder["Spree::Order"] = {serializer: "Spree::Wombat::OrderSerializer", root: "orders"}
+    Spree::Wombat::Config[:payload_builder] = payload_builder
   end
 
   config.after(:each) do

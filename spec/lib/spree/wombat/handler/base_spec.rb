@@ -49,12 +49,10 @@ module Spree
             before do
               push_objects = Spree::Wombat::Config[:push_objects]
               push_objects << "Spree::Shipment"
-              push_objects << "Spree::Order"
               Spree::Wombat::Config[:push_objects] = push_objects.uniq
 
               payload_builder = Spree::Wombat::Config[:payload_builder]
               payload_builder["Spree::Shipment"] = {serializer: "Spree::Wombat::ShipmentSerializer", root: "shipments"}
-              payload_builder["Spree::Order"] = {serializer: "Spree::Wombat::OrderSerializer", root: "orders"}
               Spree::Wombat::Config[:payload_builder] = payload_builder
             end
 
