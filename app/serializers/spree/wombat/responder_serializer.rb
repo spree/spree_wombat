@@ -15,12 +15,9 @@ module Spree
         hash = super
         if objects = hash.delete(:objects)
           objects.each do |key, values|
-            Rails.logger.error "[KEY] : #{key.inspect}"
-            Rails.logger.error "[VALUES] : #{values.inspect}"
             hash[key] = values
           end
         end
-
         hash
       end
 
