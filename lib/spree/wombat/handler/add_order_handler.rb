@@ -6,7 +6,7 @@ module Spree
         def process
           order_params = OrderHandlerBase.order_params(@payload[:order])
           order = Spree::Core::Importer::Order.import(find_spree_user,order_params)
-          response "Order number #{order.number} was added", 200, [{"orders" => OrderSerializer.new(order.reload, root: false)}]
+          response "Order number #{order.number} was added", 200, Base.wombat_objects_for(order)
         end
 
         private

@@ -103,7 +103,7 @@ module Spree
           shipment.order.reload.shipments.each do |shipment|
             shipments_payload << ShipmentSerializer.new(shipment.reload, root: false).serializable_hash
           end
-          return response("Added shipment #{shipment.number} for order #{order.number}", 200, [{"shipments" => shipments_payload}])
+          return response("Added shipment #{shipment.number} for order #{order.number}", 200, Base.wombat_objects_for(shipment))
         end
 
       end

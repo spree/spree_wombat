@@ -119,7 +119,7 @@ module Spree
           shipment.order.updater.update_shipment_state
           shipment.order.updater.update
 
-          return response("Updated shipment #{shipment_number}", 200, Base.wombat_objects_for("Spree::Shipment", shipment))
+          return response("Updated shipment #{shipment_number}", 200, Base.wombat_objects_for(shipment))
         end
 
       end
