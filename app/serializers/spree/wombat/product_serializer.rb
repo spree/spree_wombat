@@ -6,10 +6,9 @@ module Spree
 
       attributes :id, :name, :sku, :description, :price, :cost_price,
                  :available_on, :permalink, :meta_description, :meta_keywords,
-                 :shipping_category, :taxons, :options
+                 :shipping_category, :taxons, :options, :variants
 
       has_many :images, serializer: Spree::Wombat::ImageSerializer
-      has_many :variants_including_master, serializer: Spree::Wombat::VariantSerializer, root: "variants"
 
       def id
         object.sku
@@ -41,6 +40,14 @@ module Spree
 
       def options
         object.option_types.pluck(:name)
+      end
+
+      def variants
+        if object.variants.empty?
+          [Spree::Wombat::VariantSerializer.new(object.master, root:false)]
+        else
+          object.variants
+        end
       end
 
     end
