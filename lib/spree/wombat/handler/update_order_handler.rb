@@ -12,7 +12,7 @@ module Spree
             email: @payload[:order][:email]
           }
           order.update_attributes!(params)
-          response "Updated Order with number #{order_number}"
+          response "Updated Order with number #{order_number}", 200, [{"orders" => OrderSerializer.new(order.reload, root: false)}]
         end
       end
     end

@@ -99,7 +99,11 @@ module Spree
           order.updater.update_shipment_state
           order.updater.update
 
-          return response("Added shipment #{shipment.number} for order #{order.number}")
+          shipments_payload = []
+          shipment.order.reload.shipments.each do |shipment|
+            shipments_payload << ShipmentSerializer.new(shipment.reload, root: false).serializable_hash
+          end
+          return response("Added shipment #{shipment.number} for order #{order.number}", 200, [{"shipments" => shipments_payload}])
         end
 
       end

@@ -13,15 +13,17 @@ module Spree
 
       def attributes
         hash = super
-
         if objects = hash.delete(:objects)
-          objects.each do |key, array_of_objects|
-            hash[key] = array_of_objects
+          objects.each do |key, values|
+            Rails.logger.error "[KEY] : #{key.inspect}"
+            Rails.logger.error "[VALUES] : #{values.inspect}"
+            hash[key] = values
           end
         end
 
         hash
       end
+
     end
   end
 end

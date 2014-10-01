@@ -25,8 +25,8 @@ module Spree
           klass.new(message)
         end
 
-        def response(message, code = 200)
-          Spree::Wombat::Responder.new(@request_id, message, code)
+        def response(message, code = 200, objects = nil)
+          Spree::Wombat::Responder.new(@request_id, message, code, objects)
         end
 
         def process
