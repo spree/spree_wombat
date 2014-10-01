@@ -119,12 +119,7 @@ module Spree
           shipment.order.updater.update_shipment_state
           shipment.order.updater.update
 
-          shipments_payload = []
-          shipment.order.reload.shipments.each do |shipment|
-            shipments_payload << JSON.parse(ShipmentSerializer.new(shipment.reload, root: false).to_json)
-          end
-          return response("Updated shipment #{shipment_number}", 200, {"shipments" => shipments_payload })
-
+          return response("Updated shipment #{shipment_number}", 200, Base.wombat_objects_for("Spree::Shipment", shipment))
         end
 
       end
