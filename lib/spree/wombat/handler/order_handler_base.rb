@@ -25,7 +25,7 @@ module Spree
 
           order['line_items_attributes'] = line_items_hash
           order['adjustments_attributes'] = adjustments_attributes_hash
-
+          payments_attributes.map {|payment| payment.delete("id")}
           order['payments_attributes'] = payments_attributes
           order['completed_at'] = placed_on
           order
