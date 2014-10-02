@@ -21,7 +21,6 @@ module Spree
           let!(:shipment) { create(:shipment, number: message['shipment']['id'], order: order)}
 
           before do
-            #Spree::Variant.stub(:find_by_sku).and_return(order.variants.first)
             #don't want to trigger a state transition for this example
             message['shipment']['status'] = 'pending'
           end
