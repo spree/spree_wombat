@@ -46,7 +46,11 @@ module Spree
         if object.variants.empty?
           [Spree::Wombat::VariantSerializer.new(object.master, root:false)]
         else
-          object.variants
+          ActiveModel::ArraySerializer.new(
+            object.variants,
+            each_serializer: Spree::Wombat::VariantSerializer,
+            root: false
+          )
         end
       end
 

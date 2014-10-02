@@ -54,7 +54,7 @@ module Spree
 
       def adjustments
         [
-          { name: 'discount', value: adjustment_total },
+          { name: 'discount', value: object.promo_total.to_f },
           { name: 'tax', value: tax_total },
           { name: 'shipping', value: shipping_total }
         ]
@@ -71,7 +71,15 @@ module Spree
         end
 
         def tax_total
-          (object.included_tax_total + object.additional_tax_total).to_f
+          tax = 0.0
+          tax_rate_taxes = (object.included_tax_total + object.additional_tax_total).to_f
+          manual_import_adjustment_tax_adjustments = object.adjustments.select{|adjustment| adjustment.label.downcase == "tax" && adjustment.source_id == nil && adjustment.source_type == nil}
+          if(tax_rate_taxes == 0.0 && manual_import_adjustment_tax_adjustments.present?)
+            tax = manual_import_adjustment_tax_adjustments.sum(&:amount).to_f
+          else
+            tax = tax_rate_taxes
+          end
+          tax
         end
 
     end
