@@ -111,13 +111,19 @@ module Spree
 
 
           shipment.shipping_methods << shipping_method unless shipment.shipping_methods.include? shipping_method
-          shipment.refresh_rates
           shipment.save!
+
 
           # Ensure Order shipment state and totals are updated.
           # Note: we call update_shipment_state separately from update in case order is not in completed.
           shipment.order.updater.update_shipment_state
           shipment.order.updater.update
+
+          #make sure we set the provided cost, since the order updater is refreshing the shipment rates
+          # based on the shipping method.
+          shipment.update_columns(cost: shipment_attributes[:cost]) if shipment_attributes[:cost].present?
+
+
 
           return response("Updated shipment #{shipment_number}", 200, Base.wombat_objects_for(shipment))
         end

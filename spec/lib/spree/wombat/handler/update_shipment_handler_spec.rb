@@ -32,6 +32,16 @@ module Spree
             expect(order.reload.shipment_state).to eq 'pending'
           end
 
+          it "will not add a new shipment" do
+            expect{responder = handler.process}.to_not change{order.reload.shipments.count}
+          end
+
+          it "will set the correct shipping rate" do
+            message['shipment']['cost'] = 80
+            responder = handler.process
+            expect(shipment.reload.cost).to eql 80
+          end
+
           context "with mismatching items in shipment" do
 
             before do
