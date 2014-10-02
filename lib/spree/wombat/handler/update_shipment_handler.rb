@@ -119,7 +119,11 @@ module Spree
           shipment.order.updater.update_shipment_state
           shipment.order.updater.update
 
-          return response("Updated shipment #{shipment_number}")
+          #make sure we set the provided cost, since the order updater is refreshing the shipment rates
+          # based on the shipping method.
+          shipment.update_columns(cost: shipment_attributes[:cost]) if shipment_attributes[:cost].present?
+
+          return response("Updated shipment #{shipment_number}", 200, Base.wombat_objects_for(shipment))
         end
 
       end

@@ -16,8 +16,7 @@ module Spree
           external_id = shipment.delete(:id)
 
           existing_shipment = Spree::Shipment.find_by_number(external_id)
-          return response("Already have a shipment for order #{order_number} associated with shipment number #{external_id}", 500) if existing_shipment
-
+          return response("Already have a shipment for order #{order_number} associated with shipment number #{external_id}", 200) if existing_shipment
 
           address_attributes = shipment.delete(:shipping_address)
           country_iso = address_attributes.delete(:country)
@@ -99,7 +98,15 @@ module Spree
           order.updater.update_shipment_state
           order.updater.update
 
-          return response("Added shipment #{shipment.number} for order #{order.number}")
+          #make sure we set the provided cost, since the order updater is refreshing the shipment rates
+          # based on the shipping method.
+          shipment.update_columns(cost: shipment_attributes[:cost]) if shipment_attributes[:cost].present?
+
+          shipments_payload = []
+          shipment.order.reload.shipments.each do |shipment|
+            shipments_payload << ShipmentSerializer.new(shipment.reload, root: false).serializable_hash
+          end
+          return response("Added shipment #{shipment.number} for order #{order.number}", 200, Base.wombat_objects_for(shipment))
         end
 
       end
