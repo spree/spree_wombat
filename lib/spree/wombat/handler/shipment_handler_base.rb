@@ -8,8 +8,11 @@ module Spree
         def initialize(message)
           super(message)
           @shipment_payload = @payload[:shipment]
+          @shipment_payload.delete(:billing_address)
+          @shipment_payload.delete(:channel)
           @shipment_payload.delete(:email)
           @shipment_payload.delete(:stock_location)
+          @shipment_payload.delete(:totals)
         end
 
         def fetch_order(order_number)
