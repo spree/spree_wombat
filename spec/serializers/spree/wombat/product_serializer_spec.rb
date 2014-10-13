@@ -122,7 +122,7 @@ module Spree
           let!(:variant) { create(:variant, :product => product) }
           it "serialized the variant and master as nested objects" do
             product.reload
-            expect(serialized_product["variants"].count).to eql 2
+            expect(serialized_product["variants"].count).to eql 1
           end
         end
       end
