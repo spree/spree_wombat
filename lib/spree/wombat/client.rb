@@ -29,10 +29,10 @@ module Spree
             root: payload_builder[:root]
           ).to_json
 
-          push(payload)
+          push(payload) unless object_count == 0
         end
 
-        update_last_pushed(object, this_push_time)
+        update_last_pushed(object, this_push_time) unless object_count == 0
         object_count
       end
 
