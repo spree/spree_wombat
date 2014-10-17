@@ -28,7 +28,7 @@ module Spree
         end
 
         def product
-          Spree::Wombat::Jirafe::ProductSerializer.new(object.product, root:false)
+          Spree::Wombat::Jirafe::ProductWithoutVariantsSerializer.new(object.product, root:false)
         end
       end
 
