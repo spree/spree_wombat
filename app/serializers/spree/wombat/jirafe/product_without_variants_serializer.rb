@@ -9,10 +9,9 @@ module Spree
         attributes :id, :name, :sku, :description, :price, :cost_price,
                    :available_on, :permalink, :meta_description, :meta_keywords,
                    :shipping_category, :options, :weight, :height, :width,
-                   :depth, :created_at, :updated_at
+                   :depth, :created_at, :updated_at, :taxons, :meta_data
 
         has_many :images, serializer: Spree::Wombat::ImageSerializer
-        has_many :taxons, serializer: Spree::Wombat::Jirafe::TaxonSerializer
 
         def created_at
           object.created_at.getutc.try(:iso8601)
@@ -48,6 +47,19 @@ module Spree
 
         def options
           object.option_types.pluck(:name)
+        end
+
+        def taxons
+          object.taxons.collect {|t| t.self_and_ancestors.collect(&:name)}
+        end
+
+        def meta_data
+          {
+            :jirafe => ActiveModel::ArraySerializer.new(object.taxons,
+              each_serializer: Spree::Wombat::Jirafe::TaxonSerializer,
+              root: "taxons"
+            )
+          }
         end
       end
 
