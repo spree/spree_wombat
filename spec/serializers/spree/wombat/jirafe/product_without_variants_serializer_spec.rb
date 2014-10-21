@@ -35,7 +35,7 @@ module Spree
           context "meta-data" do
 
             it "contains taxons data" do
-              binding.pry
+              
               expect(serialized_product["meta_data"]["jirafe"]["taxons"]).to be_present
               expect(serialized_product["meta_data"]["jirafe"]["taxons"].size).to eql 5
 
