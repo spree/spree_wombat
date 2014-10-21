@@ -6,7 +6,7 @@ module Spree
       class OrderSerializer < ActiveModel::Serializer
 
         attributes :id, :number, :status, :channel, :email, :currency, :placed_on, :updated_at, :totals,
-          :adjustments, :guest_token, :shipping_instructions
+          :adjustments, :guest_token, :shipping_instructions, :visit_id, :visitor_id
 
         has_many :line_items,  serializer: Spree::Wombat::Jirafe::LineItemSerializer
         has_many :payments, serializer: Spree::Wombat::PaymentSerializer
@@ -42,7 +42,7 @@ module Spree
           if object.completed_at?
             object.completed_at.getutc.try(:iso8601)
           else
-            ''
+            object.created_at.getutc.try(:iso8601)
           end
         end
 
