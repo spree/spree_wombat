@@ -15,7 +15,9 @@ module Spree
 
         payload_builder = Spree::Wombat::Config[:payload_builder][object]
 
-        scope = object.constantize
+        model_name = payload_builder[:model].present? ? payload_builder[:model] : object
+
+        scope = model_name.constantize
 
         if filter = payload_builder[:filter]
           scope = scope.send(filter.to_sym)
