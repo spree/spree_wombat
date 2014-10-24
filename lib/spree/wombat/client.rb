@@ -7,7 +7,7 @@ module Spree
   module Wombat
     class Client
 
-      def self.push_batches(object)
+      def self.push_batches(object, ts_offset = 5)
         object_count = 0
 
         last_push_time = Spree::Wombat::Config[:last_pushed_timestamps][object] || Time.now
@@ -22,6 +22,9 @@ module Spree
         if filter = payload_builder[:filter]
           scope = scope.send(filter.to_sym)
         end
+
+        # go 'ts_offset' seconds back in time to catch missing objects
+        last_push_time = last_push_item - ts_offset.seconds
 
         scope.where(updated_at: last_push_time...this_push_time).find_in_batches(batch_size: Spree::Wombat::Config[:batch_size]) do |batch|
           object_count += batch.size
