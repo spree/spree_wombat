@@ -24,7 +24,7 @@ module Spree
         end
 
         # go 'ts_offset' seconds back in time to catch missing objects
-        last_push_time = last_push_item - ts_offset.seconds
+        last_push_time = last_push_time - ts_offset.seconds
 
         scope.where(updated_at: last_push_time...this_push_time).find_in_batches(batch_size: Spree::Wombat::Config[:batch_size]) do |batch|
           object_count += batch.size
