@@ -10,7 +10,9 @@ module Spree
 
           if customer_return.return_items.length == 0
             received_items = return_items(true)
-            return response("Customer return #{received_items.first.customer_return.number} has already been processed", 200) if received_items.length == intended_quantity
+            if received_items.present? && received_items.length == intended_quantity
+              return response("Customer return #{received_items.first.customer_return.number} has already been processed", 200)
+            end
           end
 
           if customer_return.return_items.length != intended_quantity
