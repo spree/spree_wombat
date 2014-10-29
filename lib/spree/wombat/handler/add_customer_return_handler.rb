@@ -8,8 +8,13 @@ module Spree
 
           customer_return = CustomerReturn.new(stock_location: stock_location, return_items: return_items)
 
+          if customer_return.return_items.length == 0
+            received_items = return_items(true)
+            return response("Customer return #{received_items.first.customer_return.number} has already been processed", 200) if received_items.length == intended_quantity
+          end
+
           if customer_return.return_items.length != intended_quantity
-            raise "Unable to create the requested amount of return items"
+            return response("Unable to create the requested amount of return items", 500)
           end
 
           if customer_return.save
@@ -28,11 +33,11 @@ module Spree
           StockLocation.find_by!(name: customer_return_params[:stock_location])
         end
 
-        def return_items
+        def return_items(include_received = false)
           customer_return_params[:items].flat_map do |item|
             inventory_units = item_inventory_units(item)
             return_items = inventory_units.map(&:current_or_new_return_item)
-            return_items = prune_received_return_items(return_items)
+            return_items = prune_received_return_items(return_items) unless include_received
             return_items = sort_return_items(return_items)
             return_items.take(item[:quantity].presence || 1)
           end.compact
