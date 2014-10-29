@@ -37,6 +37,7 @@ end
 shared_examples "does not receive the return items" do
   let(:error_status_code) { 500 }
   let(:error_message) { "Customer return could not be created, errors:" }
+  let(:ignore_reception_status) { false }
 
   it "responds with an error" do
     expect(responder.summary).to match /#{error_message}/
@@ -48,8 +49,10 @@ shared_examples "does not receive the return items" do
   end
 
   it "does not tell any of the return items to receive" do
-    subject
-    expect([[], ["awaiting_return"]]).to include Spree::ReturnItem.all.map(&:reception_status).uniq
+    unless ignore_reception_status
+      subject
+      expect([[], ["awaiting_return"]]).to include Spree::ReturnItem.all.map(&:reception_status).uniq
+    end
   end
 
   it_behaves_like "does not attempt to refund the customer"
@@ -192,6 +195,39 @@ module Spree
             it_behaves_like "does not receive the return items" do
               let(:error_message) { "Unable to create the requested amount of return items" }
             end
+          end
+
+          context "items have already been received" do
+            context "any of the items could possibly be returned" do
+              before do
+                Spree::CustomerReturn.create!(
+                  return_items: [order.inventory_units.last.return_items.build],
+                  stock_location: stock_location
+                )
+              end
+
+              it_behaves_like "does not receive the return items" do
+                let(:error_message) { "Unable to create the requested amount of return items" }
+                let(:ignore_reception_status) { true }
+              end
+            end
+
+            context "none of the items could possibly be returned since they all already have been" do
+              before do
+                Spree::CustomerReturn.create!(
+                  return_items: order.inventory_units.map { |iu| iu.return_items.build },
+                  stock_location: stock_location
+                )
+              end
+
+              it_behaves_like "does not receive the return items" do
+                let(:error_status_code) { 200 }
+                let(:error_message) { /Customer return \w+ has already been processed/ }
+                let(:ignore_reception_status) { true }
+              end
+            end
+
+
           end
 
           context "there is a mix of created and new return items" do
