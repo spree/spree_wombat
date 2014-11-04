@@ -64,6 +64,10 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean_with :truncation
   end
+
+  config.mock_with :rspec do |mocks|
+    mocks.yield_receiver_to_any_instance_implementation_blocks = true
+  end
 end
 
 class Spree::Wombat::Handler::MyCustomHandler < Spree::Wombat::Handler::Base
