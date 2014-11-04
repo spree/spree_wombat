@@ -1,9 +1,8 @@
 require 'spec_helper'
 
-shared_examples "receives the return items" do
-
+shared_examples "receives the return items" do |message=/Customer return \d+ was added/|
   it "succeeds" do
-    expect(responder.summary).to match /Customer return \d+ was added/
+    expect(responder.summary).to match message
     expect(responder.code).to eql 200
   end
 
@@ -28,7 +27,11 @@ shared_examples "receives the return items" do
 
   it "attempts to accept all of the return items" do
     accept_count = 0
-    Spree::ReturnItem.any_instance.stub(:attempt_accept) { accept_count += 1 }
+    original_method = Spree::ReturnItem.instance_method(:attempt_accept)
+    Spree::ReturnItem.any_instance.stub(:attempt_accept) do |return_item|
+      accept_count += 1
+      original_method.bind(return_item).call
+    end
     subject
     expect(accept_count).to eq 3
   end
@@ -149,6 +152,15 @@ module Spree
               end
               it_behaves_like "receives the return items"
               it_behaves_like "does not attempt to refund the customer"
+            end
+
+            context "the customer return raises an IncompleteReimbursement error" do
+              before do
+                expect_any_instance_of(Spree::Reimbursement).to(
+                  receive(:perform!).and_raise(Spree::Reimbursement::IncompleteReimbursement)
+                )
+              end
+              it_behaves_like "receives the return items", /Customer return \d+ processed but not fully reimbursed/
             end
           end
 
