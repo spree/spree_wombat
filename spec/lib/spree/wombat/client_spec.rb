@@ -8,8 +8,8 @@ module Spree
 
       describe ".push_object" do
         it "pushes a serialized object" do
-          serialized_order = OrderSerializer.new(order, root: "orders").to_json
-          expect(Client).to receive(:push).with(serialized_order)
+          serialized_order = OrderSerializer.new(order, root: false)
+          expect(Client).to receive(:push).with({"orders" => [serialized_order]}.to_json)
           Client.push_item(order.class.to_s, order.id)
         end
 
