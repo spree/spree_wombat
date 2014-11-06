@@ -48,7 +48,8 @@ module Spree
         object = model_name.constantize.find(id)
 
         serializer = payload_builder[:serializer].constantize
-        payload = serializer.new(object, root: payload_builder[:root]).to_json
+
+        payload = { payload_builder[:root] => [serializer.new(object, root: false)] }.to_json
         push(payload)
       end
 
