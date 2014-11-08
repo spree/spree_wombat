@@ -4,7 +4,7 @@ module Spree
   module Wombat
     describe AdjustmentSerializer do
 
-      let(:adjustment) { create(:adjustment) }
+      let(:adjustment) { create(:adjustment, order: create(:order)) }
       let(:serialized_adjustment) { AdjustmentSerializer.new(adjustment, root: false).to_json }
 
       it "serializes the value as float" do
