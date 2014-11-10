@@ -7,6 +7,8 @@ gem 'sass-rails', '~> 4.0.0'
 
 gem 'pg'
 
+gem 'wombat-ruby', github: 'wombat/wombat-ruby'
+
 group :test do
   gem 'hub_samples', github: "spree/hub_samples", branch: "master"
   gem 'timecop'

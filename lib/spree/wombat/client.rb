@@ -2,6 +2,7 @@ require 'json'
 require 'openssl'
 require 'httparty'
 require 'active_model/array_serializer'
+require 'wombat'
 
 module Spree
   module Wombat
@@ -34,28 +35,11 @@ module Spree
             root: payload_builder[:root]
           ).to_json
 
-          push(payload) unless object_count == 0
+          ::Wombat::Client.push(payload, Spree::Wombat::Config[:push_url]) unless object_count == 0
         end
 
         update_last_pushed(object, this_push_time) unless object_count == 0
         object_count
-      end
-
-      def self.push(json_payload)
-        res = HTTParty.post(
-                Spree::Wombat::Config[:push_url],
-                {
-                  body: json_payload,
-                  headers: {
-                   'Content-Type'       => 'application/json',
-                   'X-Hub-Store'        => Spree::Wombat::Config[:connection_id],
-                   'X-Hub-Access-Token' => Spree::Wombat::Config[:connection_token],
-                   'X-Hub-Timestamp'    => Time.now.utc.to_i.to_s
-                  }
-                }
-              )
-
-        validate(res)
       end
 
       private
@@ -64,12 +48,6 @@ module Spree
         last_pushed_ts[object] = new_last_pushed
         Spree::Wombat::Config[:last_pushed_timestamps] = last_pushed_ts
       end
-
-      def self.validate(res)
-        raise PushApiError, "Push not successful. Wombat returned response code #{res.code} and message: #{res.body}" if res.code != 202
-      end
     end
   end
 end
-
-class PushApiError < StandardError; end
