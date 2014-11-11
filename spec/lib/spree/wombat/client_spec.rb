@@ -6,23 +6,6 @@ module Spree
 
       let!(:order) { create(:shipped_order) }
 
-      describe ".push_object" do
-        it "pushes a serialized object" do
-          serialized_order = OrderSerializer.new(order, root: false)
-          expect(Client).to receive(:push).with({"orders" => [serialized_order]}.to_json)
-          Client.push_item(order.class.to_s, order.id)
-        end
-
-        it "raises an RecordNotFound exception" do
-          expect { Client.push_item(order.class.to_s, order.id + 1) }.to raise_error(ActiveRecord::RecordNotFound)
-        end
-
-        it "returns true" do
-          expect(HTTParty).to receive(:post).and_return(double(code: 202, body: "Success"))
-          expect(Client.push_item(order.class.to_s, order.id)).to be true
-        end
-      end
-
       describe ".push_batches" do
         it "pushes all orders updated recently" do
           second_order = create(:shipped_order)
@@ -87,30 +70,7 @@ module Spree
           Client.push_batches(order.class.to_s)
         end
       end
-
-      describe ".validate" do
-        it "returns true" do
-          response = double(code: 202, body: "Success")
-          expect(Client.validate(response)).to be true
-        end
-
-        it "raises an exception" do
-          response = double(code: 500, body: "Error")
-          expect { Client.validate(response) }.to raise_error(PushApiError)
-        end
-      end
-
-      describe ".push" do
-        it "uses the configured push_url" do
-          Client.stub(:validate)
-          expect(HTTParty).to receive(:post).with("http://godzilla.org", anything)
-          stub_config("Spree::Order", { push_url: "http://godzilla.org" })
-          Client.push({}.to_json)
-        end
-      end
-
     end
-
   end
 end
 

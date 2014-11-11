@@ -35,7 +35,7 @@ module Spree
             root: payload_builder[:root]
           ).to_json
 
-          ::Wombat::Client.push(payload, Spree::Wombat::Config[:push_url]) unless object_count == 0
+          ::Wombat::Client.push(payload, configuration) unless object_count == 0
         end
 
         update_last_pushed(object, this_push_time) unless object_count == 0
@@ -43,6 +43,15 @@ module Spree
       end
 
       private
+
+      def self.configuration
+        {
+          push_url: Spree::Wombat::Config[:push_url],
+          connection_id: Spree::Wombat::Config[:connection_id],
+          connection_token: Spree::Wombat::Config[:connection_token],
+        }
+      end
+
       def self.update_last_pushed(object, new_last_pushed)
         last_pushed_ts = Spree::Wombat::Config[:last_pushed_timestamps]
         last_pushed_ts[object] = new_last_pushed
