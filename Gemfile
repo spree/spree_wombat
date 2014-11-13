@@ -2,12 +2,13 @@ source 'https://rubygems.org'
 
 gem 'spree', github: 'spree/spree', branch: "master"
 
-gem 'coffee-rails', '~> 4.0.0'
-gem 'sass-rails', '~> 4.0.0'
+# gem 'coffee-rails', '~> 4.0.0'
+# gem 'sass-rails', '~> 4.0.0'
 
 gem 'pg'
 
-gem 'wombat-ruby', github: 'wombat/wombat-ruby'
+#gem 'wombat-ruby', github: 'wombat/wombat-ruby'
+gem 'wombat-ruby', path: "/Users/peterberkenbosch/code/github/wombat/wombat-ruby"
 
 group :test do
   gem 'hub_samples', github: "spree/hub_samples", branch: "master"
