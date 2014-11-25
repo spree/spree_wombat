@@ -71,13 +71,29 @@ module Spree
 
       def items
         i = []
-        object.inventory_units.each do |inventory_unit|
-          i << InventoryUnitSerializer.new(inventory_unit, root: false)
+        object.inventory_units.group_by(&:line_item).each do |line_item, units|
+          if units.map(&:variant).uniq.count > 1
+
+            units.group_by(&:variant).each do |variant, units|
+              line = build_custom_line line_item, units.count, variant
+              i << InventoryUnitSerializer.new(line, root: false)
+            end
+          else
+            line = build_custom_line line_item, units.count, units.first.variant
+            i << InventoryUnitSerializer.new(line, root: false)
+          end
         end
         i
       end
 
       private
+        def build_custom_line(line_item, quantity, variant)
+          LineItem.new do |line|
+            line.quantity = quantity
+            line.variant = variant
+            line.price = line_item.price
+          end
+        end
 
         def adjustment_total
           object.order.adjustment_total.to_f
@@ -90,7 +106,6 @@ module Spree
         def tax_total
           object.order.tax_total.to_f
         end
-
     end
   end
 end

@@ -7,6 +7,60 @@ module Spree
       let(:shipment) { create(:shipment, address: create(:address), order: create(:order_with_line_items)) }
       let(:serialized_shipment) { JSON.parse (ShipmentSerializer.new(shipment, root: false).to_json) }
 
+      it "merge inventory into a single shipment item when needed" do
+        variant = Variant.new sku: "wom"
+        line = LineItem.new variant: variant
+        inventories = 2.times.map {
+          InventoryUnit.new line_item: line, variant: variant
+        }
+
+        shipment = Shipment.new
+        shipment.inventory_units = inventories
+
+        serialized = ShipmentSerializer.new(shipment, root: false)
+        expect(serialized.items.first.quantity).to eq 2
+
+        other_variant = Variant.new sku: "other wom"
+        other_line = LineItem.new variant: other_variant
+        inventories.push InventoryUnit.new(line_item: other_line, variant: other_variant)
+
+        shipment = Shipment.new
+        shipment.inventory_units = inventories
+
+        serialized = ShipmentSerializer.new(shipment, root: false)
+        expect(serialized.items.last.quantity).to eq 1
+      end
+
+      context "inventory unit's variant doesnt match line_item variant" do
+        it "still merge inventory quantity properly" do
+          variant = Variant.new sku: "wom"
+          line = LineItem.new variant: variant, price: 33
+
+          other_variant = Variant.new sku: "other wom"
+          other_line = LineItem.new variant: other_variant, price: 11
+
+          inventories = [
+            InventoryUnit.new(line_item: line, variant: variant),
+            InventoryUnit.new(line_item: other_line, variant: variant),
+            InventoryUnit.new(line_item: line, variant: other_variant)
+          ]
+
+          shipment = Shipment.new
+          shipment.inventory_units = inventories
+
+          serialized = ShipmentSerializer.new(shipment, root: false)
+          expect(serialized.items.count).to eq 3
+
+          expect(serialized.items.map(&:quantity)).to match_array [1, 1, 1]
+
+          expected = [variant.sku, variant.sku, other_variant.sku]
+          expect(serialized.items.map(&:product_id)).to match_array expected
+
+          expected = [line.price.to_f, other_line.price.to_f, line.price.to_f]
+          expect(serialized.items.map(&:price)).to match_array expected
+        end
+      end
+
       it "serializes the number as id" do
         expect(serialized_shipment["id"]).to eql shipment.number
       end

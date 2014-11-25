@@ -10,7 +10,8 @@ module Spree
       end
 
       def price
-        object.line_item.price.round(2).to_f
+        price = object.respond_to?(:price) ? object.price : object.line_item.price
+        price.round(2).to_f
       end
 
       def product_id
