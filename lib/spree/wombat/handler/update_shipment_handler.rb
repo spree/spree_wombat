@@ -3,6 +3,16 @@ module Spree
     module Handler
       class UpdateShipmentHandler < Base
 
+        def normalize_quantity(shipment_lines)
+          grouped_arr = shipment_lines.group_by { |h| h[:sku] }
+          result = grouped_arr.keys.map do |item|
+            {
+              sku: item,
+              quantity: grouped_arr[item].inject(0) { |sum, h| sum + h[:quantity] }
+            }
+          end
+        end
+
         def process
 
           shipment_hsh = @payload[:shipment]
@@ -78,7 +88,9 @@ module Spree
               { sku: inventory_unit.variant.sku, quantity: quantity }
             end
 
+            shipment_lines = normalize_quantity(shipment_lines)
             received_shipping_items = shipping_items.map { |item| {sku: item[:product_id], quantity: item[:quantity].to_i} }
+            received_shipping_items = normalize_quantity(received_shipping_items)
 
             shipping_items_diff = received_shipping_items.reject do |item|
               # using Array#delete deletes all of the instances of the item, we just want to delete the first

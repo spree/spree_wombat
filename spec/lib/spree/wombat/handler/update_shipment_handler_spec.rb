@@ -6,6 +6,28 @@ module Spree
       let(:message) {::Hub::Samples::Shipment.request}
       let(:handler) { Handler::UpdateShipmentHandler.new(message.to_json) }
 
+      describe "normalize_quantity" do
+
+        context "with different sku's" do
+
+          let(:shipment_lines) { [{sku: "ABC", quantity: 1, sku: "ABCD", quantity: 1, }] }
+
+          it "returns the same array" do
+            expect(handler.normalize_quantity(shipment_lines)).to eql shipment_lines
+          end
+
+        end
+
+        context "with same sku's present" do
+          let(:shipment_lines) { [{sku: "ABC", quantity: 1,sku: "ABC", quantity: 1, sku: "ABCD", quantity: 1, }] }
+
+          it "will normalize the data and sum the quantity by sku" do
+            expect(handler.normalize_quantity(shipment_lines)).to eql [{sku: "ABC", quantity: 2, sku: "ABCD", quantity: 1, }]
+          end
+        end
+
+      end
+
       describe "process" do
 
         context "with all reference data present" do
