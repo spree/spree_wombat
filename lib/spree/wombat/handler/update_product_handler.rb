@@ -30,9 +30,9 @@ module Spree
               response "Product #{@product.sku} updated"
             end
           else
-            response "Cannot update the product due to validation errors", 500
+            errors = @product.errors.full_messages.join("\n")
+            response "Product not valid. #{errors}", 500
           end
-
         end
 
         # the Spree::Product and Spree::Variant master
