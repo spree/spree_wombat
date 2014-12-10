@@ -31,12 +31,28 @@ module Spree
         end
 
         context 'when an exception happens' do
+          let(:web_request) do
+            post 'consume', ::Hub::Samples::Order.request.to_json, {use_route: :spree, format: :json, path: invalid_path}
+          end
+          let(:invalid_path) { 'upblate_order' }
+
           it 'will return resonse with the exception message and backtrace' do
-            post 'consume', ::Hub::Samples::Order.request.to_json, {use_route: :spree, format: :json, path: 'upblate_order'}
+            web_request
             expect(response.code).to eql "500"
             json = JSON.parse(response.body)
             expect(json["summary"]).to eql "uninitialized constant Spree::Wombat::Handler::UpblateOrderHandler"
             expect(json["backtrace"]).to be_present
+          end
+
+          context 'with an error_notifier' do
+            before { Spree::Wombat::WebhookController.error_notifier = error_notifier }
+            after { Spree::Wombat::WebhookController.error_notifier = nil }
+            let(:error_notifier) { ->(responder) {} }
+
+            it 'calls the error_notifier' do
+              expect(error_notifier).to receive(:call)
+              web_request
+            end
           end
         end
 

@@ -12,8 +12,9 @@ module Spree
       end
 
       it "serializes a backtrace when present" do
-        responder.backtrace = "Big fat error"
-        json_response = "{\"request_id\":\"12355\",\"summary\":\"Order abc124 was added\",\"backtrace\":\"Big fat error\"}"
+        responder.exception = StandardError.new
+        responder.exception.set_backtrace(['some backtrace'])
+        json_response = "{\"request_id\":\"12355\",\"summary\":\"Order abc124 was added\",\"backtrace\":\"[\\\"some backtrace\\\"]\"}"
         expect(ResponderSerializer.new(responder, root: false).to_json).to eql json_response
       end
 
