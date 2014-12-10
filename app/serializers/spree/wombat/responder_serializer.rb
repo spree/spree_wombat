@@ -6,7 +6,7 @@ module Spree
       attributes :request_id, :summary, :backtrace, :objects
 
       def filter(keys)
-        keys.delete(:backtrace) unless object.backtrace.present?
+        keys.delete(:backtrace) if object.exception.nil?
         keys.delete(:objects) unless object.objects.present?
         keys
       end
@@ -22,6 +22,11 @@ module Spree
 
         hash
       end
+
+      def backtrace
+        object.exception.backtrace.to_s if object.exception
+      end
+
     end
   end
 end
