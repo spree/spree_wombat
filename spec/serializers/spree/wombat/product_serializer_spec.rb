@@ -77,7 +77,7 @@ module Spree
         context "options" do
           let(:product) {create(:product_with_option_types)}
           it "returns an array with the option_types" do
-            expect(serialized_product["options"]).to eql ["foo-size"]
+            expect(serialized_product["options"]).to eql ["foo-size-#{product.option_types.first.id}"]
           end
         end
 
