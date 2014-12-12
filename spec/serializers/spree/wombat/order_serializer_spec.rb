@@ -61,10 +61,9 @@ module Spree
 
           context 'discount' do
             before do
-              create(:adjustment, adjustable: order, source_type: 'Spree::PromotionAction', amount: -10)
-              create(:adjustment, adjustable: order.line_items.first, source_type: 'Spree::PromotionAction', amount: -10)
-              create(:adjustment, adjustable: order.shipments.first, source_type: 'Spree::PromotionAction', amount: -10)
-              #create(:adjustment, adjustable: order, source_type: nil, source_id: nil, amount: -10, label: 'Manual discount')
+              create(:adjustment, adjustable: order, source_type: 'Spree::PromotionAction', amount: -10, order: order)
+              create(:adjustment, adjustable: order.line_items.first, source_type: 'Spree::PromotionAction', amount: -10, order: order)
+              create(:adjustment, adjustable: order.shipments.first, source_type: 'Spree::PromotionAction', amount: -10, order: order)
               order.update_totals
             end
 
@@ -76,7 +75,7 @@ module Spree
 
           context 'manual tax from import' do
             before do
-              create(:adjustment, adjustable: order, source_type: nil, source_id: nil, amount: 1.14, label: 'Tax')
+              create(:adjustment, adjustable: order, source_type: nil, source_id: nil, amount: 1.14, label: 'Tax', order: order)
               order.update_totals
             end
 
