@@ -89,7 +89,7 @@ argument. e.g. with a proc:
 ```ruby
 # in config/initializers/wombat.rb:
 Rails.application.config.to_prepare do
-  WebhookController.error_notifier = ->(responder) do
+  Spree::Wombat::WebhookController.error_notifier = ->(responder) do
     Honeybadger.notify(responder.exception)
   end
 end
