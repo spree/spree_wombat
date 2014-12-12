@@ -9,7 +9,6 @@ module Spree
           id = params.delete(:id)
           product = Spree::Variant.where(is_master: true, sku: params[:sku]).first.product
           return response("Cannot find product with SKU #{params[:sku]}!", 500) unless product
-
           # Disable the after_touch callback on taxons
           Spree::Product.skip_callback(:touch, :after, :touch_taxons)
 
@@ -44,7 +43,7 @@ module Spree
 
           product
         end
-        
+
       end
     end
   end
