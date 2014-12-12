@@ -75,9 +75,10 @@ module Spree
         end
 
         context "options" do
-          let(:product) {create(:product_with_option_types)}
+          let(:product) { create(:product_with_option_types) }
           it "returns an array with the option_types" do
-            expect(serialized_product["options"]).to eql ["foo-size-#{product.option_types.first.id}"]
+            expect(serialized_product["options"].first).to match "foo-size-"
+            expect(serialized_product["options"].size).to eq 1
           end
         end
 
@@ -118,8 +119,8 @@ module Spree
         end
 
         context "with variants" do
-          let!(:product) {create(:product_with_option_types)}
-          let!(:variant) { create(:variant, :product => product) }
+          let!(:product) { create(:product_with_option_types) }
+          let!(:variant) { create(:variant, product: product) }
           it "serialized the variant and master as nested objects" do
             product.reload
             expect(serialized_product["variants"].count).to eql 1
