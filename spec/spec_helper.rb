@@ -1,6 +1,5 @@
 require 'simplecov'
 SimpleCov.start do
-
   add_group 'Models', '/app/models/'
   add_group 'Controllers', '/app/controllers/'
   add_group 'Serializers', '/app/serializers/'
@@ -32,40 +31,38 @@ require 'hub/samples'
 # in spec/support/ and its subdirectories.
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each {|f| require f}
 
+require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/factories'
 require 'spree/testing_support/preferences'
-require 'spree/testing_support/controller_requests'
 require 'active_model/serializer'
 
 RSpec.configure do |config|
   config.backtrace_exclusion_patterns = [/gems\/activesupport/, /gems\/actionpack/, /gems\/rspec/]
   config.color = true
   config.infer_spec_type_from_file_location!
-  
+
   config.include FactoryGirl::Syntax::Methods
-  config.include Spree::TestingSupport::Preferences, :type => :controller
-  config.include Spree::TestingSupport::ControllerRequests, :type => :controller
+  config.include Spree::TestingSupport::Preferences, type: :controller
+  config.include Spree::TestingSupport::ControllerRequests, type: :controller
 
   config.fail_fast = ENV['FAIL_FAST'] || false
 
   config.use_transactional_fixtures = false
 
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :deletion
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
   end
 
   config.before do
     HTTParty.stub :post
     Spree::Wombat::Config[:connection_token] = "abc1233"
+
+    DatabaseCleaner.start
+  end
+
+  config.before :suite do
+    DatabaseCleaner.strategy = :deletion
+    DatabaseCleaner.clean_with :truncation
   end
 end
 

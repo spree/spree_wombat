@@ -16,7 +16,11 @@ module Spree
           hsh
         end
 
-        let!(:variant) { create(:master_variant, sku: message["product"]["sku"])}
+        let!(:variant) do
+          p = create(:product)
+          p.master.update_attributes(sku: message["product"]["sku"])
+          p.master
+        end
 
         let(:handler) { Handler::UpdateProductHandler.new(message.to_json) }
 
