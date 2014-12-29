@@ -10,7 +10,7 @@ module Spree
           end
 
           user = Spree.user_class.new(email: email)
-          user.save(validation: false)
+          user.save(validate: false)
 
           firstname = @payload["customer"]["firstname"]
           lastname = @payload["customer"]["lastname"]
