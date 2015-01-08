@@ -46,6 +46,58 @@ module Spree
           end
         end
 
+        context "and regarding taxons" do
+          let(:message_without_taxons) do
+            message["product"].delete("taxons")
+            message
+          end
+
+          let(:message_with_empty_taxons) do
+            message["product"]["taxons"] = []
+            message
+          end
+
+          let(:message_with_different_taxons) do
+            message["product"]["taxons"] = [["Categories", "Scuba Gear"], ["Brands", "Scuba"]]
+            message
+          end
+
+          let(:handler_without_taxons) { Handler::UpdateProductHandler.new(message_without_taxons.to_json) }
+          let(:handler_with_empty_taxons) { Handler::UpdateProductHandler.new(message_with_empty_taxons.to_json) }
+          let(:handler_with_different_taxons) { Handler::UpdateProductHandler.new(message_with_different_taxons.to_json) }
+
+          let(:product) { Spree::Variant.find_by_sku(message["product"]["sku"]).product }
+
+          before do
+            handler.process
+          end
+
+          it "updates a product with taxons" do
+            expect(product.taxons.size).to eq 3
+          end
+
+          it "updates a product without taxons" do
+            expect(product.taxons.size).to eq 3
+
+            handler_without_taxons.process
+            expect(product.taxons.size).to eq 3
+          end
+
+          it "updates a product with empty taxons" do
+            expect(product.taxons.size).to eq 3
+
+            handler_with_empty_taxons.process
+            expect(product.taxons.size).to eq 0
+          end
+
+          it "updates a product with different taxons" do
+            expect(product.taxons.size).to eq 3
+
+            handler_with_different_taxons.process
+            expect(product.taxons.size).to eq 2
+          end
+        end
+
 
         context "response" do
           let(:responder) { handler.process }
