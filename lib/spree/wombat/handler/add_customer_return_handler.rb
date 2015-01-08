@@ -25,7 +25,7 @@ module Spree
           else
             response "Customer return could not be created, errors: #{customer_return.errors.full_messages}", 400
           end
-        rescue Spree::Reimbursement::IncompleteReimbursement
+        rescue Spree::Reimbursement::IncompleteReimbursementError
           # These items need manual intervention and will be identified and handled separately
           response "Customer return #{customer_return.id} processed but not fully reimbursed", 200
         rescue => e

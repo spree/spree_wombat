@@ -157,7 +157,7 @@ module Spree
             context "the customer return raises an IncompleteReimbursement error" do
               before do
                 expect_any_instance_of(Spree::Reimbursement).to(
-                  receive(:perform!).and_raise(Spree::Reimbursement::IncompleteReimbursement)
+                  receive(:perform!).and_raise(Spree::Reimbursement::IncompleteReimbursementError)
                 )
               end
               it_behaves_like "receives the return items", /Customer return \d+ processed but not fully reimbursed/
