@@ -6,7 +6,7 @@ module Spree
       let(:payment) do
         Spree::Payment.new do |p|
           p.amount = 55
-          p.identifier = "0number"
+          p.number = "0number"
           p.state = "completed"
           p.payment_method = Spree::PaymentMethod.new(name: "P Method")
         end
@@ -17,7 +17,7 @@ module Spree
       it "serializes attributes" do
         expect(JSON.parse(subject)["amount"]).to eql payment.amount.to_f
         expect(JSON.parse(subject)["payment_method"]).to eql payment.payment_method.name
-        expect(JSON.parse(subject)["number"]).to eql payment.identifier
+        expect(JSON.parse(subject)["number"]).to eql payment.number
         expect(JSON.parse(subject)["status"]).to eql payment.state
       end
 

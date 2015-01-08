@@ -7,10 +7,6 @@ module Spree
 
       has_one :source, serializer: Spree::Wombat::SourceSerializer
 
-      def number
-        object.identifier
-      end
-
       def payment_method
         object.payment_method.name
       end
