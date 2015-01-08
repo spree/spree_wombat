@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'capybara', '~> 2.1'
   gem.add_development_dependency 'coffee-rails'
-  gem.add_development_dependency 'database_cleaner'
+  gem.add_development_dependency 'database_cleaner', '~> 1.3.0' # 1.4.0 is broken https://github.com/DatabaseCleaner/database_cleaner/issues/317
   gem.add_development_dependency 'factory_girl', '~> 4.4'
   gem.add_development_dependency 'ffaker'
   gem.add_development_dependency 'rspec-rails',  '~> 2.13'
