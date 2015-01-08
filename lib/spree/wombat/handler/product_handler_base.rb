@@ -5,7 +5,7 @@ module Spree
     module Handler
       class ProductHandlerBase < Base
 
-        attr_accessor :params, :children_params, :master_images, :taxon_ids,
+        attr_accessor :params, :children_params, :master_images, :taxons, :taxon_ids,
                       :root_options, :properties
 
         def initialize(message)
@@ -16,12 +16,13 @@ module Spree
           #posible master images
           @master_images = @params.delete(:images)
           @taxon_ids = []
+          @taxons_list = @params.delete(:taxons)
         end
 
         def root_product_attrs
           permalink = @params.delete(:permalink)
           shipping_category_name = @params.delete(:shipping_category)
-          process_taxons(@params.delete(:taxons))
+          process_taxons(@taxons_list)
           @root_options = @params.delete(:options)
           @properties = @params.delete(:properties)
 
@@ -33,7 +34,7 @@ module Spree
           sku = @params[:sku]
           @params = @params.slice *Spree::Product.attribute_names
           @params.delete(:id) # Reject ID as it should be set by database or else it could convert to 0 in postgresql.
-          @params[:taxon_ids] = Spree::Taxon.where(id: @taxon_ids).leaves.pluck(:id)
+          @params[:taxon_ids] = Spree::Taxon.where(id: @taxon_ids).leaves.pluck(:id) unless @taxons_list.nil?
           @params[:price] = price
           @params[:sku] = sku
           @params
