@@ -90,12 +90,12 @@ module Spree
           if taxon
             parent.children << taxon
           else
-            taxon = parent.children.create(name: taxon_name, position: position)
+            taxon = parent.children.create!(name: taxon_name, position: position)
           end
           parent.save
           # store the taxon so we can assign it later
           @taxon_ids << taxon.id
-          add_taxon(taxon, taxon_names, position+1)
+          add_taxon(taxon, taxon_names, position + 1)
         end
 
         def process_images(variant, images)
@@ -125,7 +125,7 @@ module Spree
             if variant
               variant.update_attributes(child_product)
             else
-              variant = product.variants.create({ product: product }.merge(child_product))
+              variant = product.variants.create!({ product: product }.merge(child_product))
             end
             process_images(variant, images)
           end
