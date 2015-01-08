@@ -46,6 +46,9 @@ module Spree
             error_notifier.call(responder)
           end
         end
+        if responder.code >= 400
+          logger.info "responder_summary=#{responder.summary.inspect}"
+        end
         render(
           json: ResponderSerializer.new(responder, root: false),
           status: responder.code
