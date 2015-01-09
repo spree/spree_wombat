@@ -2,7 +2,7 @@
 
 Connect your SpreeCommerce Storefront to Wombat, providing push API and webhook handlers
 
-[![Build Status](https://travis-ci.org/spree/spree_wombat.svg?branch=refactor-client-wombat-ruby)](https://travis-ci.org/spree/spree_wombat)
+[![Build Status](https://travis-ci.org/spree/spree_wombat.svg?branch=master)](https://travis-ci.org/spree/spree_wombat)
 
 ## Installation
 
