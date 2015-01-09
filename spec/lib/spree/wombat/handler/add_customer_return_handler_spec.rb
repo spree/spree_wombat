@@ -243,7 +243,9 @@ module Spree
           end
 
           context "there is a mix of created and new return items" do
-            let(:return_item) { order.inventory_units.last.current_or_new_return_item.tap(&:save) }
+            let(:return_item) do
+              order.inventory_units.order(:id).last.current_or_new_return_item.tap(&:save)
+            end
 
             before do
               rma.return_items << return_item
