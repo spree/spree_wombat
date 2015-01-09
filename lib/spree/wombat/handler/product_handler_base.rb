@@ -5,7 +5,7 @@ module Spree
     module Handler
       class ProductHandlerBase < Base
 
-        attr_accessor :params, :children_params, :master_images, :taxons, :taxon_ids,
+        attr_accessor :params, :children_params, :master_images, :taxons_list, :taxon_ids,
                       :root_options, :properties
 
         def initialize(message)
