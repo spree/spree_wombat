@@ -3,10 +3,15 @@ require 'spec_helper'
 module Spree
   module Wombat
     describe Handler::UpdateProductHandler do
-
       before do
         img_fixture = File.open(File.expand_path('../../../../../fixtures/thinking-cat.jpg', __FILE__))
         URI.stub(:parse).and_return img_fixture
+      end
+
+      it "respond properly if product not found" do
+        handler = described_class.new Hub::Samples::Product.request.to_json
+        response = handler.process
+        expect(response.summary).to match "Cannot find product with SKU"
       end
 
       context "#process" do
