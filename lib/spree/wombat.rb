@@ -21,6 +21,8 @@ require 'spree/wombat/handler/update_order_handler'
 
 require 'spree/wombat/handler/set_inventory_handler'
 
+require 'spree/wombat/handler/set_price_handler'
+
 require 'spree/wombat/handler/add_shipment_handler'
 require 'spree/wombat/handler/update_shipment_handler'
 
