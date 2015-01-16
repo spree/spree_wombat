@@ -47,6 +47,11 @@ module Spree
           return_item.additional_tax_total = 5.0.to_d
           expect(serialized_return_item[:additional_tax_total]).to eq "5.0"
         end
+
+        it "sets the id" do
+          return_item.save!
+          expect(serialized_return_item[:id]).to eq return_item.id
+        end
       end
     end
   end
