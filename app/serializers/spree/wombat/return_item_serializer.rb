@@ -3,7 +3,7 @@ require 'active_model/serializer'
 module Spree
   module Wombat
     class ReturnItemSerializer < ActiveModel::Serializer
-      attributes :return_authorization_id, :product_id, :exchange_product_id,
+      attributes :id, :return_authorization_id, :product_id, :exchange_product_id,
         :reception_status, :acceptance_status, :pre_tax_amount, :included_tax_total,
         :additional_tax_total
 
