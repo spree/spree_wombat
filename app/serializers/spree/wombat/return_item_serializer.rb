@@ -33,7 +33,7 @@ module Spree
       end
 
       def store
-        order.store.code
+        order.store.try(:code)
       end
 
       private
