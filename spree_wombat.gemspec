@@ -18,13 +18,16 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'httparty'
 
   gem.add_development_dependency 'capybara', '~> 2.1'
-  gem.add_development_dependency 'coffee-rails'
+  gem.add_development_dependency 'coffee-rails', '~> 4.0.0'
   gem.add_development_dependency 'database_cleaner', '~> 1.3.0' # 1.4.0 is broken https://github.com/DatabaseCleaner/database_cleaner/issues/317
   gem.add_development_dependency 'factory_girl', '~> 4.4'
   gem.add_development_dependency 'ffaker'
+  gem.add_development_dependency 'mysql2'
+  gem.add_development_dependency 'pg'
   gem.add_development_dependency 'rspec-rails',  '~> 2.13'
-  gem.add_development_dependency 'sass-rails'
+  gem.add_development_dependency 'sass-rails', '~> 4.0.0'
   gem.add_development_dependency 'selenium-webdriver'
   gem.add_development_dependency 'simplecov'
   gem.add_development_dependency 'sqlite3'
+  gem.add_development_dependency 'timecop'
 end
