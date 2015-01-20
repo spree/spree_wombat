@@ -47,6 +47,47 @@ module Spree
           return_item.additional_tax_total = 5.0.to_d
           expect(serialized_return_item[:additional_tax_total]).to eq "5.0"
         end
+
+        it "sets the id" do
+          return_item.save!
+          expect(serialized_return_item[:id]).to eq return_item.id
+        end
+
+        it 'sets the order number' do
+          return_item.save!
+          expect(serialized_return_item[:order_number]).to eq return_item.inventory_unit.order.number
+        end
+
+        it 'sets the created_at' do
+          return_item.save!
+          expect(serialized_return_item[:created_at]).to eq return_item.created_at.as_json
+        end
+
+        context 'is reimbursed' do
+          it 'sets reimbursed to true' do
+            return_item.build_reimbursement
+            expect(serialized_return_item[:reimbursed]).to eq true
+          end
+
+          it 'sets reimbursed_at' do
+            return_item.create_reimbursement
+            expect(serialized_return_item[:reimbursed_at]).to eq return_item.reimbursement.created_at.as_json
+          end
+        end
+
+        context 'is not reimbursed' do
+          it 'sets reimbursed to false' do
+            expect(serialized_return_item[:reimbursed]).to eq false
+          end
+
+          it 'does not set reimbursed_at' do
+            expect(serialized_return_item[:reimbursed_at]).to eq nil
+          end
+        end
+
+        it "sets the order's store as the store code" do
+          expect(serialized_return_item[:store]).to eq return_item.inventory_unit.order.store.code
+        end
       end
     end
   end
