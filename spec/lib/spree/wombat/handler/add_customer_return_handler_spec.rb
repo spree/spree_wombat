@@ -116,13 +116,13 @@ module Spree
                   {
                     sku: variant_1.sku,
                     quantity: "1",
-                    product_status: "GOOD",
+                    resellable: true,
                     order_number: order.number,
                   },
                   {
                     sku: variant_2.sku,
                     quantity: "2",
-                    product_status: "DAMAGED",
+                    resellable: false,
                     order_number: order.number,
                   }
                 ]
@@ -136,6 +136,11 @@ module Spree
 
           it "has the correct request_id" do
             expect(responder.request_id).to eql message["request_id"]
+          end
+
+          context "resellable" do
+            it { expect { subject }.to change { Spree::ReturnItem.count }.by(3) }
+            it { subject; expect(Spree::ReturnItem.order(:created_at).last(3).map(&:resellable)).to eq [true, false, false] }
           end
 
           context "all return items are for the rma" do
