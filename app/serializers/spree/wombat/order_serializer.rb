@@ -9,6 +9,7 @@ module Spree
 
       has_many :line_items,  serializer: Spree::Wombat::LineItemSerializer
       has_many :payments, serializer: Spree::Wombat::PaymentSerializer
+      has_many :promotions, serializer: Spree::Wombat::PromotionSerializer
 
       has_one :shipping_address, serializer: Spree::Wombat::AddressSerializer
       has_one :billing_address, serializer: Spree::Wombat::AddressSerializer
