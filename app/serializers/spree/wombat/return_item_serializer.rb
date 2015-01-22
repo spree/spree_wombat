@@ -6,7 +6,7 @@ module Spree
       attributes :id, :return_authorization_id, :product_id, :exchange_product_id,
         :reception_status, :acceptance_status, :pre_tax_amount, :included_tax_total,
         :additional_tax_total, :order_number, :created_at, :reimbursed_at, :reimbursed,
-        :store
+        :store, :resellable
 
       def product_id
         inventory_unit.variant.sku
