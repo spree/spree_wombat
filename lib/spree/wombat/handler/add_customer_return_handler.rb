@@ -43,6 +43,7 @@ module Spree
             inventory_units = item_inventory_units(item)
             return_items = inventory_units.map(&:current_or_new_return_item)
             return_items = prune_received_return_items(return_items) unless include_received
+            return_items.each { |ri| ri.resellable = !!item[:resellable] }
             return_items = sort_return_items(return_items)
 
             quantity = item[:quantity].to_i
