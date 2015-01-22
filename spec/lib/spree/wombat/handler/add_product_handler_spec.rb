@@ -214,7 +214,7 @@ module Spree
         it "will assign the option types to the product" do
           handler.process_option_types(product,["color", "size"])
           expect(product.option_types.count).to eql 2
-          expect(product.option_types.collect(&:name)).to eql ["color", "size"]
+          expect(product.option_types.collect(&:name)).to match_array ["color", "size"]
         end
       end
 
