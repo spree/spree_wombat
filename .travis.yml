@@ -1,0 +1,7 @@
+env:
+  - DB=mysql
+  - DB=postgres
+language: ruby
+rvm:
+  - 2.2
+sudo: false
