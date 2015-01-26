@@ -14,6 +14,34 @@ module Spree
         expect(response.summary).to match "Cannot find product with SKU"
       end
 
+      it "doesnt create duplicated variant" do
+        message = {
+          product: {
+            name: 'rails',
+            sku: 'rails',
+            shipping_category: 'default',
+            price: 30,
+            variants: [
+              {
+                sku: 'not rails',
+                deleted_at: Time.now,
+                options: []
+              }
+            ]
+          }
+        }
+
+        expect {
+          handler = Handler::AddProductHandler.new message.to_json
+          handler.process
+        }.to change { Variant.unscoped.count }.by(2)
+
+        expect {
+          handler = described_class.new message.to_json
+          response = handler.process
+        }.not_to change { Variant.unscoped.count }
+      end
+
       context "#process" do
         let!(:message) do
           hsh = ::Hub::Samples::Product.request
