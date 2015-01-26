@@ -122,7 +122,9 @@ module Spree
             child_product = child_product.slice *Spree::Variant.attribute_names
             child_product[:options] = option_type_values.collect {|k,v| {name: k, value: v} }
             child_product[:price] = price
-            variant = product.variants.find_by_sku(child_product[:sku])
+
+            variant = product.variants.unscoped.find_by_sku(child_product[:sku])
+
             if variant
               variant.update_attributes(child_product)
             else
