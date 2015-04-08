@@ -1,4 +1,4 @@
-require 'active_model/serializer'
+require 'active_model_serializers'
 
 module Spree
   module Wombat
@@ -7,8 +7,8 @@ module Spree
                 :shipping_method, :tracking, :placed_on, :shipped_at, :totals,
                 :updated_at, :channel, :items
 
-      has_one :bill_to, serializer: AddressSerializer, root: "billing_address"
-      has_one :ship_to, serializer: AddressSerializer, root: "shipping_address"
+      has_one :bill_to, serializer: AddressSerializer, key: "billing_address"
+      has_one :ship_to, serializer: AddressSerializer, key: "shipping_address"
 
       def id
         object.number
