@@ -1,4 +1,4 @@
-require 'active_model/serializer'
+require 'active_model_serializers'
 
 module Spree
   module Wombat
