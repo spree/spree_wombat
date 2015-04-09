@@ -1,4 +1,4 @@
-require 'active_model/serializer'
+require 'active_model_serializers'
 
 module Spree
   module Wombat
@@ -6,8 +6,14 @@ module Spree
 
       attributes :id, :name, :sku, :description, :price, :cost_price,
                  :available_on, :permalink, :meta_description, :meta_keywords,
-                 :shipping_category, :taxons, :options, :weight, :height, :width,
+                 :shipping_category, :taxons, :weight, :height, :width,
                  :depth, :variants
+
+      def attributes
+        super.tap do |hash|
+          hash.update(options: options_text)
+        end
+      end
 
       has_many :images, serializer: Spree::Wombat::ImageSerializer
 
@@ -39,7 +45,7 @@ module Spree
         object.taxons.collect {|t| t.self_and_ancestors.collect(&:name)}
       end
 
-      def options
+      def options_text
         object.option_types.pluck(:name)
       end
 

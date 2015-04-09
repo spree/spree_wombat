@@ -1,4 +1,4 @@
-require 'active_model/serializer'
+require 'active_model_serializers'
 <% if superclass != "ActiveModel::Serializer" %>
 # inherit from ActiveModel::Serializer if you want to completely replace the existing serializer
 <% end %>
