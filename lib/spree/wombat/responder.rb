@@ -1,11 +1,10 @@
-require "active_model/serializer_support"
-
 module Spree
   module Wombat
     class Responder
       class ErroredResponse < StandardError; end
 
-      include ActiveModel::SerializerSupport
+      alias read_attribute_for_serialization send
+
       attr_accessor :request_id, :summary, :code, :objects, :exception
 
       def initialize(request_id, summary, code=200, objects=nil, exception=nil)
