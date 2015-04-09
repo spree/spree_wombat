@@ -25,7 +25,7 @@ module Spree
 
           order['line_items_attributes'] = line_items_hash
           order['adjustments_attributes'] = adjustments_attributes_hash
-          payments_attributes.map {|payment| payment.delete("id")}
+          payments_attributes.map { |payment| payment.delete("id") }
           order['payments_attributes'] = payments_attributes
           order['completed_at'] = placed_on
           order
@@ -47,20 +47,19 @@ module Spree
         end
 
         def self.rehash_line_items(line_items)
-          hash = {}
-          line_items.each_index do |i|
-            sku = line_items[i].delete 'product_id'
-            hash[i.to_s] = line_items[i].slice *Spree::LineItem.attribute_names
-            hash[i.to_s]['sku'] = sku
+          line_items.map do |item|
+            sku = item.delete 'product_id'
+            item = item.slice *Spree::LineItem.attribute_names
+            item['sku'] = sku
+            item
           end
-          hash
         end
 
         def self.prepare_adjustments(adjustments)
           adjustments.map do |adjustment|
-              adjustment['label'] = adjustment.delete('name') if adjustment.has_key?('name')
-              adjustment['amount'] = adjustment.delete('value') if adjustment.has_key?('value')
-              adjustment
+            adjustment['label'] = adjustment.delete('name') if adjustment.key?('name')
+            adjustment['amount'] = adjustment.delete('value') if adjustment.key?('value')
+            adjustment
           end
         end
 

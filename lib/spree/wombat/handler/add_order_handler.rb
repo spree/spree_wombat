@@ -22,7 +22,7 @@ module Spree
           end
 
           order_params["adjustments_attributes"] = adjustment_attrs if adjustment_attrs.present?
-          order = Spree::Core::Importer::Order.import(find_spree_user,order_params)
+          order = Spree::Core::Importer::Order.import(find_spree_user, order_params)
           order.reload
 
           number_of_shipments_created = order.shipments.count
