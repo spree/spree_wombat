@@ -5,7 +5,7 @@ module Spree
     class ShipmentSerializer < ActiveModel::Serializer
       attributes :id, :order_id, :email, :cost, :status, :stock_location,
                 :shipping_method, :tracking, :placed_on, :shipped_at, :totals,
-                :updated_at, :channel, :items
+                :updated_at, :channel, :items, :shipping_method_code
 
       has_one :bill_to, serializer: AddressSerializer, root: "billing_address"
       has_one :ship_to, serializer: AddressSerializer, root: "shipping_address"
@@ -40,6 +40,10 @@ module Spree
 
       def shipping_method
         object.shipping_method.try(:name)
+      end
+      
+      def shipping_method_code
+        object.shipping_method.try(:code)  
       end
 
       def placed_on
