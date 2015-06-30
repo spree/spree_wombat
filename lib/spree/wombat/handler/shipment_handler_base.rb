@@ -53,7 +53,8 @@ module Spree
           shipping_items.each do |shipping_item|
             # get variant
             sku = shipping_item[:product_id]
-            variant = Spree::Variant.find_by_sku(sku)
+            variant = Spree::Variant.active.find_by_sku(sku) ||
+                        Spree::Variant.deleted.find_by_sku(sku)
 
             unless variant.present?
               missing_variants << sku
