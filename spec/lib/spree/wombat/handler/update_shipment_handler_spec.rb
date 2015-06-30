@@ -31,16 +31,32 @@ module Spree
           end
 
           before do
-            Spree::Variant.stub(:find_by_sku).and_return(order.variants.first)
             Spree::Shipment.any_instance.stub(:order).and_return order
           end
 
           it "will return a proper message" do
+            Spree::Variant.stub(:find_by_sku).and_return(order.variants.first)
             responder = handler.process
             expect(responder.summary).to eql "Updated shipment #{shipment.number} for order #{order.number}"
             expect(responder.code).to eql 200
           end
 
+          it "will handle SKUs that match those of deleted items" do
+            variant = create(:base_variant, sku: "SPREE-T-SHIRT")
+
+            line_item = order.line_items.first
+            line_item.variant_id = variant.id
+            line_item.save!
+
+            Spree::Variant.first.update_attributes!(sku: "SPREE-T-SHIRT")
+            variant = Spree::Variant.first
+            variant.deleted_at = Time.now
+            variant.save!
+
+            responder = handler.process
+            expect(responder.summary).to eql "Updated shipment #{shipment.number} for order #{order.number}"
+            expect(responder.code).to eql 200
+          end
         end
 
       end
