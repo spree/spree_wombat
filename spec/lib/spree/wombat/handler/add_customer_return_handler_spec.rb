@@ -169,33 +169,6 @@ module Spree
             end
           end
 
-          context "there are return items that are not preauthorized" do
-            it_behaves_like "receives the return items"
-            it_behaves_like "does not attempt to refund the customer"
-          end
-
-          context "there are return items that are preauthorized by another rma" do
-            let(:other_rma) do
-              create(:return_authorization, order: order, return_items: order.inventory_units.map(&:current_or_new_return_item))
-            end
-
-            it_behaves_like "receives the return items"
-            it_behaves_like "does not attempt to refund the customer"
-          end
-
-          context "the rma does not exist" do
-            before { rma.destroy! }
-            it_behaves_like "receives the return items"
-            it_behaves_like "does not attempt to refund the customer"
-          end
-
-          context "the order does not exist" do
-            before { order.destroy! }
-            it_behaves_like "does not receive the return items" do
-              let(:error_message) { "Customer return could not be fully processed, errors:" }
-            end
-          end
-
           context "the stock location does not exist" do
             before { StockLocation.where(name: stock_location.name).destroy_all }
             it_behaves_like "does not receive the return items" do
@@ -218,7 +191,7 @@ module Spree
             context "any of the items could possibly be returned" do
               before do
                 Spree::CustomerReturn.create!(
-                  return_items: [order.inventory_units.last.return_items.build],
+                  return_items: [order.inventory_units.last.return_items.create(return_authorization: create(:return_authorization, order: order, stock_location: stock_location))],
                   stock_location: stock_location
                 )
               end
@@ -232,7 +205,7 @@ module Spree
             context "none of the items could possibly be returned since they all already have been" do
               before do
                 Spree::CustomerReturn.create!(
-                  return_items: order.inventory_units.map { |iu| iu.return_items.build },
+                  return_items: order.inventory_units.map { |iu| iu.return_items.create return_authorization: create(:return_authorization, order: order, stock_location: stock_location) },
                   stock_location: stock_location
                 )
               end
@@ -279,14 +252,6 @@ module Spree
               expect { subject }.not_to change { Spree::ReturnItem.count }
               customer_return = Spree::CustomerReturn.last
               expect(customer_return.return_items).to eq [return_item]
-            end
-
-            it "does not use return items that have already been received" do
-              return_item.receive!
-              expect { subject }.to change { Spree::ReturnItem.count }
-              customer_return = Spree::CustomerReturn.last
-              expect(customer_return.return_items.length).to eq 1
-              expect(customer_return.return_items).not_to eq [return_item]
             end
 
             it "prefers created return items that are for the rma requested" do
