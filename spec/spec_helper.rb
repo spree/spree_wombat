@@ -43,7 +43,7 @@ require 'active_model/serializer'
 RSpec.configure do |config|
   config.backtrace_exclusion_patterns = [/gems\/activesupport/, /gems\/actionpack/, /gems\/rspec/]
   config.color = true
-
+  config.infer_spec_type_from_file_location!
 
   config.include Spree::Core::TestingSupport::Preferences, :type => :controller
   config.include Spree::Core::TestingSupport::ControllerRequests, :type => :controller
