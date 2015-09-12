@@ -25,7 +25,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'mysql2'
   gem.add_development_dependency 'pg'
   gem.add_development_dependency 'rspec-rails',  '~> 2.13'
-  gem.add_development_dependency 'sass-rails', '~> 4.0.0'
+  gem.add_development_dependency 'sass-rails', '~> 5.0.0'
   gem.add_development_dependency 'selenium-webdriver'
   gem.add_development_dependency 'simplecov'
   gem.add_development_dependency 'sqlite3'
