@@ -9,7 +9,7 @@ Connect your SpreeCommerce Storefront to Wombat, providing push API and webhook 
 Add spree_wombat to your Gemfile:
 
 ```ruby
-gem 'spree_wombat', git: 'git@github.com:spree/spree_wombat.git', branch: 'master'
+gem 'spree_wombat', github: 'spree/spree_wombat', branch: 'master'
 ```
 
 Bundle your dependencies and run the installation generator:
