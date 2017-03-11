@@ -11,9 +11,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "spree_wombat"
   gem.require_paths = ["lib"]
-  gem.version       = '2.2.0'
+  gem.version       = '3.3.0'
 
-  gem.add_dependency 'spree_core', '~> 3.1.0.beta'
+  gem.add_dependency 'spree_core', '~> 3.3.0.alpha'
   gem.add_dependency 'active_model_serializers', '~> 0.8.3'
   gem.add_dependency 'httparty'
 
