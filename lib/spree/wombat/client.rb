@@ -66,7 +66,7 @@ module Spree
       end
 
       def self.validate(res)
-        raise PushApiError, "Push not successful. Wombat returned response code #{res.code} and message: #{res.body}" if res.code != 202
+        raise PushApiError, "Push not successful. Wombat returned response code #{res.code} and message: #{res.body}" unless [200, 202].include?(res.code)
       end
     end
   end
