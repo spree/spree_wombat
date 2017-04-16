@@ -75,7 +75,7 @@ module Spree
 
         def sort_return_items(return_items)
           return_items = return_items.sort_by { |ri| -(ri.created_at || DateTime.now).to_i }
-          return_items = return_items.sort_by { |ri| ri.return_authorization.try(:number) == customer_return_params[:rma] ? 0 : 1 }
+          return_items = return_items.sort_by { |ri| ri.return_authorization.try(:number) == customer_return_params[:rma_number] ? 0 : 1 }
           return_items.sort_by { |ri| ri.persisted? ? 0 : 1 }
         end
 
