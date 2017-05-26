@@ -13,9 +13,10 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = '3.3.0'
 
-  gem.add_dependency 'spree_core', '~> 3.3.0.alpha'
+  gem.add_dependency 'spree_core', '~> 3.0.0.alpha'
   gem.add_dependency 'active_model_serializers', '~> 0.8.3'
   gem.add_dependency 'httparty'
+  gem.add_dependency 'rake', '< 11.0'
 
   gem.add_development_dependency 'capybara', '~> 2.1'
   gem.add_development_dependency 'coffee-rails', '~> 4.0.0'
