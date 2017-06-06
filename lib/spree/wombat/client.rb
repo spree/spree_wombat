@@ -18,7 +18,8 @@ module Spree
           root: payload_builder[:root]
         )
 
-        push(JSON.parse(payload.to_json).merge(JSON.parse(params.to_json)))
+        merged_params = JSON.parse(payload.to_json).merge(JSON.parse(params.to_json))
+        push(merged_params.to_json)
       end
 
       def self.push_batches(object, ts_offset = 5)
