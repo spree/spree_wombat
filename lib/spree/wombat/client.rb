@@ -7,6 +7,21 @@ module Spree
   module Wombat
     class Client
 
+      # Not use config(wombat initializer) just push object
+      def self.push_object(object, params)
+        return unless object
+        payload_builder = Spree::Wombat::Config[:payload_builder][object.class.to_s]
+
+        payload = ActiveModel::ArraySerializer.new(
+          [object],
+          each_serializer: payload_builder[:serializer].constantize,
+          root: payload_builder[:root]
+        )
+
+        merged_params = JSON.parse(payload.to_json).merge(JSON.parse(params.to_json))
+        push(merged_params.to_json)
+      end
+
       def self.push_batches(object, ts_offset = 5)
         object_count = 0
 
@@ -47,7 +62,7 @@ module Spree
                 {
                   body: json_payload,
                   headers: {
-                   'Content-Type'       => 'application/json',
+                   'Content-Type'        => 'application/json',
                    'X-Hub-Store'        => Spree::Wombat::Config[:connection_id],
                    'X-Hub-Access-Token' => Spree::Wombat::Config[:connection_token],
                    'X-Hub-Timestamp'    => Time.now.utc.to_i.to_s
@@ -66,7 +81,7 @@ module Spree
       end
 
       def self.validate(res)
-        raise PushApiError, "Push not successful. Wombat returned response code #{res.code} and message: #{res.body}" if res.code != 202
+        raise PushApiError, "Push not successful. Wombat returned response code #{res.code} and message: #{res.body}" unless [200, 202].include?(res.code)
       end
     end
   end
