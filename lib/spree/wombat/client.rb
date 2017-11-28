@@ -8,14 +8,14 @@ module Spree
     class Client
 
       # Not use config(wombat initializer) just push object
-      def self.push_object(object, params)
+      def self.push_object(object, params, options = {})
         return unless object
         payload_builder = Spree::Wombat::Config[:payload_builder][object.class.to_s]
 
         payload = ActiveModel::ArraySerializer.new(
           [object],
-          each_serializer: payload_builder[:serializer].constantize,
-          root: payload_builder[:root]
+          { each_serializer: payload_builder[:serializer].constantize,
+          root: payload_builder[:root] }.merge(options)
         )
 
         merged_params = JSON.parse(payload.to_json).merge(JSON.parse(params.to_json))
