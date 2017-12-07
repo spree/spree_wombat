@@ -27,8 +27,8 @@ module Spree
       end
 
       def exception_handler(exception)
-        base_handler = Handler::Base.new(@webhook_body)
-        responder = base_handler.response(exception.message, 500, nil, exception)
+        handler = Handler::Base.build_handler(@called_hook, @webhook_body)
+        responder = handler.response(exception.message, 500, nil, exception)
         render_responder(responder)
         return false
       end
